@@ -83,6 +83,11 @@ export function AppSidebar() {
 
   // Helper function to check if a link is active
   const isActive = (href: string) => {
+    if (href === "/dashboard") {
+      // For the main dashboard, only highlight when exactly on /dashboard
+      return pathname === href;
+    }
+    // For other items, highlight when on the exact path or subpaths
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 

@@ -2,6 +2,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
 import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/components/auth/auth-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,7 +24,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>{children}</SidebarProvider>
+          <AuthProvider>
+            <SidebarProvider>{children}</SidebarProvider>
+          </AuthProvider>
+          <Toaster position="top-right" />
         </ThemeProvider>
       </body>
     </html>
