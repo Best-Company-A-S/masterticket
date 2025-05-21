@@ -7,7 +7,7 @@ export default function DashboardPage() {
   const { data: session } = useSession();
   const { activeOrganization } = useOrganization();
   return (
-    <div className="flex items-center h-screen justify-center">
+    <div className="flex items-center h-screen w-full justify-center">
       <div className="flex flex-col items-center">
         <h1>Welcome to dashboard, {session?.user?.name} 👋</h1>
         <p>

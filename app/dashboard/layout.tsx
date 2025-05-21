@@ -1,5 +1,6 @@
 "use client";
 
+import { AppSidebar } from "@/components/app-sidebar";
 import { OrganizationProvider } from "@/components/organization/organization-provider";
 
 export default function DashboardLayout({
@@ -8,10 +9,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <OrganizationProvider requireOrganization={true} showSwitcher={true}>
-      <div className="flex min-h-screen flex-col">
-        <div className="flex-1">{children}</div>
-      </div>
+    <OrganizationProvider requireOrganization={true} showSwitcher={false}>
+      <AppSidebar />
+      <div className="w-full h-screen">{children}</div>
     </OrganizationProvider>
   );
 }
