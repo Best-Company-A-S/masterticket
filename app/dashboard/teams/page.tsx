@@ -3,6 +3,7 @@
 import { useOrganization } from "@/lib/hooks/use-organization";
 import { authClient } from "@/lib/auth-client";
 import { useState, useEffect } from "react";
+import { useTeamContext } from "@/components/organization/team-context";
 import {
   Card,
   CardContent,
@@ -107,6 +108,7 @@ export default function TeamsPage() {
     requireOrganization: true,
   });
 
+  const { refreshTeams: refreshTeamContext } = useTeamContext();
   const [teams, setTeams] = useState<Team[]>([]);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [loadingTeams, setLoadingTeams] = useState(true);
@@ -205,21 +207,29 @@ export default function TeamsPage() {
 
     setCreating(true);
     try {
-      const { data, error } = await authClient.organization.createTeam({
-        name: newTeamName.trim(),
-        organizationId: activeOrganization.id,
+      const response = await fetch("/api/organization/create-team", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: newTeamName.trim(),
+          organizationId: activeOrganization.id,
+        }),
       });
 
-      if (error) {
-        toast.error(error.message || "Failed to create team");
-        return;
-      }
+      const data = await response.json();
 
-      if (data) {
-        toast.success("Team created successfully");
+      if (data.success) {
+        toast.success(
+          "Team created successfully! You've been added as the team owner."
+        );
         setNewTeamName("");
         setShowCreateTeam(false);
         fetchTeams();
+        refreshTeamContext(); // Refresh team context so sidebar updates
+      } else {
+        toast.error(data.error || "Failed to create team");
       }
     } catch (error) {
       console.error("Error creating team:", error);
@@ -280,6 +290,7 @@ export default function TeamsPage() {
       toast.success("Team deleted successfully");
       setShowDeleteTeam(null);
       fetchTeams();
+      refreshTeamContext(); // Refresh team context so sidebar updates
     } catch (error) {
       console.error("Error deleting team:", error);
       toast.error("Failed to delete team");

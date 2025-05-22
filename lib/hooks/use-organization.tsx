@@ -170,6 +170,7 @@ export function useOrganization(options: UseOrganizationOptions = {}) {
     isAdmin,
     isMember,
     userRole: activeMember?.role,
+    userTeamRole: activeMember?.team?.name ? activeMember.role : null, // Role in current team
     selectOrganization: (organizationId: string) => {
       return authClient.organization.setActive({
         organizationId,
