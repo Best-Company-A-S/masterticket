@@ -26,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  Bell,
   Building2,
   ChevronDown,
   Home,
@@ -43,6 +44,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import { CreateOrganizationModal } from "@/components/organization/create-organization-modal";
+import { FaRobot } from "react-icons/fa";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -64,15 +66,14 @@ export function AppSidebar() {
       icon: Ticket,
     },
     {
-      title: "Public Board",
-      href: "/dashboard/board",
-      icon: PanelLeft,
+      title: "AI Assistant",
+      href: "/dashboard/ai-assistant",
+      icon: FaRobot,
     },
     {
-      title: "Messages",
-      href: "/dashboard/messages",
-      icon: MessageSquare,
-      badge: "3",
+      title: "Notifications",
+      href: "/dashboard/notifications",
+      icon: Bell,
     },
     {
       title: "Teams",
