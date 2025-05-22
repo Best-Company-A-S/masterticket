@@ -157,4 +157,9 @@ model TicketComment {
   ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   authorId String
   author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  // Add parent-child relationship for replies
+  parentId String?
+  parent TicketComment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  replies TicketComment[] @relation("CommentReplies")
 }

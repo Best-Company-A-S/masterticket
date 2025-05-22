@@ -11,7 +11,7 @@ const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
     redirect("/dashboard");
   }
 
-  return <div>{children}</div>;
+  return <div className="w-full">{children}</div>;
 };
 
 export default AuthLayout;

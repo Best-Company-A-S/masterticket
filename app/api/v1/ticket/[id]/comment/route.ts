@@ -8,8 +8,8 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const ticketId = params.id;
-  const { content } = await req.json();
+  const { id } = await params;
+  const { content, parentId } = await req.json();
 
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -29,7 +29,7 @@ export async function POST(
   try {
     // Get the ticket to check if it exists
     const ticket = await prisma.ticket.findUnique({
-      where: { id: ticketId },
+      where: { id },
       include: { comments: true },
     });
 
@@ -37,17 +37,50 @@ export async function POST(
       return NextResponse.json({ error: "Ticket not found" }, { status: 404 });
     }
 
+    // If parentId is provided, check if the parent comment exists
+    if (parentId) {
+      const parentComment = await prisma.ticketComment.findUnique({
+        where: { id: parentId },
+      });
+
+      if (!parentComment) {
+        return NextResponse.json(
+          { error: "Parent comment not found" },
+          { status: 404 }
+        );
+      }
+
+      // Ensure the parent comment belongs to the same ticket
+      if (parentComment.ticketId !== id) {
+        return NextResponse.json(
+          { error: "Parent comment does not belong to this ticket" },
+          { status: 400 }
+        );
+      }
+    }
+
     // Create the comment
     const comment = await prisma.ticketComment.create({
       data: {
         content,
-        ticketId,
+        ticketId: id,
         authorId: session.user.id,
+        parentId: parentId || null,
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
       },
     });
 
-    // If this is the first comment, calculate and update the response time
-    if (ticket.comments.length === 0) {
+    // If this is the first comment and not a reply, calculate and update the response time
+    if (ticket.comments.length === 0 && !parentId) {
       const createdAt = new Date(ticket.createdAt);
       const commentCreatedAt = new Date();
       const diffInMs = commentCreatedAt.getTime() - createdAt.getTime();
@@ -55,7 +88,7 @@ export async function POST(
 
       // Update the ticket with the response time
       await prisma.ticket.update({
-        where: { id: ticketId },
+        where: { id },
         data: { responseTime: diffInHours },
       });
     }
@@ -75,12 +108,21 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const ticketId = params.id;
+  const { id } = await params;
 
   try {
     const comments = await prisma.ticketComment.findMany({
-      where: { ticketId },
-      include: { author: true },
+      where: { ticketId: id },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+      },
       orderBy: { createdAt: "asc" },
     });
 

@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Clock, MessageSquare } from "lucide-react";
 import { useTickets, Ticket } from "@/lib/hooks/use-tickets";
 import { formatDistanceToNow } from "date-fns";
+import CommentSection from "@/components/tickets/comment-section";
 
 export default function TicketDetailsPage() {
   const params = useParams();
@@ -150,16 +151,10 @@ export default function TicketDetailsPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Comments</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-4 text-muted-foreground">
-                Comments feature coming soon...
-              </div>
-            </CardContent>
-          </Card>
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Comments</h2>
+            <CommentSection ticketId={ticket.id} />
+          </div>
         </div>
       ) : (
         <div className="text-center p-8">Ticket not found</div>
