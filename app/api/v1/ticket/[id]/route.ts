@@ -57,7 +57,7 @@ export async function PUT(req: NextRequest) {
 /* Get a ticket by id */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
 

@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 /* Add a comment to a ticket */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
   const { content, parentId } = await req.json();
@@ -105,10 +105,10 @@ export async function POST(
 
 /* Get all comments for a ticket */
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
 
   try {
     const comments = await prisma.ticketComment.findMany({

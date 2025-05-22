@@ -14,6 +14,8 @@ MasterTicket is a comprehensive ticket management system built with Next.js 15, 
 - **Response time tracking** and analytics
 - **Comment system** for ticket discussions
 - **Dashboard** with ticket statistics and visualizations
+- **AI-powered ticket assistant** for improved support efficiency
+- **Team-based assignments** and internal ticketing
 
 ## 📋 Table of Contents
 
@@ -47,6 +49,7 @@ graph TD
         API --> Auth[Authentication]
         API --> TicketAPI[Ticket API]
         API --> OrganizationAPI[Organization API]
+        API --> AIAssistant[AI Assistant]
     end
 ```
 
@@ -163,6 +166,7 @@ sequenceDiagram
     participant Frontend
     participant API
     participant Database
+    participant AIAssistant
 
     User->>Frontend: Login
     Frontend->>API: Authentication Request
@@ -191,6 +195,11 @@ sequenceDiagram
     Database-->>API: Comment Created
     API-->>Frontend: Updated Comments
     Frontend-->>User: Updated Ticket Thread
+
+    User->>Frontend: Use AI Assistant
+    Frontend->>AIAssistant: Query with ticket context
+    AIAssistant-->>Frontend: AI-generated suggestions
+    Frontend-->>User: Assistant recommendations
 ```
 
 ## 🛠️ Tech Stack
@@ -204,6 +213,7 @@ sequenceDiagram
 - **UI Components**: Radix UI primitives
 - **Forms**: React Hook Form with Zod validation
 - **API Client**: Axios
+- **AI Features**: Google Gemini API integration for ticket assistance
 
 ## 🚀 Getting Started
 
@@ -260,15 +270,7 @@ sequenceDiagram
 Create a `.env.local` file with the following variables:
 
 ```
-# Database
-DATABASE_URL="postgresql://username:password@localhost:5432/masterticket"
 
-# Authentication
-GITHUB_CLIENT_ID=your_github_client_id
-GITHUB_CLIENT_SECRET=your_github_client_secret
-
-# Next.js
-NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
 ## 📚 API Documentation
@@ -334,6 +336,36 @@ Body:
 ```json
 {
   "id": "ticket_id"
+}
+```
+
+#### Add comment to ticket
+
+```
+POST /api/v1/ticket/{id}/comment
+```
+
+Body:
+
+```json
+{
+  "content": "Comment content with markdown support",
+  "isInternal": false
+}
+```
+
+### AI Assistant API
+
+```
+POST /api/v1/ai/ticket-assistant
+```
+
+Body:
+
+```json
+{
+  "ticketId": "ticket_id",
+  "query": "User question or context for the AI"
 }
 ```
 
