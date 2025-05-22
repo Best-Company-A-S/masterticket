@@ -23,6 +23,12 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
+  // Admin plugin fields
+  role          String    @default("user")
+  banned        Boolean   @default(false)
+  banReason     String?
+  banExpires    DateTime?
+  
   sessions      Session[]
   accounts      Account[]
   members       Member[]
@@ -40,6 +46,9 @@ model Session {
   activeOrganizationId String?
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+  
+  // Admin plugin field
+  impersonatedBy       String?
   
   user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   activeOrganization   Organization? @relation(fields: [activeOrganizationId], references: [id], onDelete: SetNull)

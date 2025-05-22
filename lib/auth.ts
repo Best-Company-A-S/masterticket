@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
-import { organization } from "better-auth/plugins";
+import { organization, admin } from "better-auth/plugins";
 
 // Custom function to generate 6-digit invitation codes
 function generateInvitationCode(): string {
@@ -13,6 +13,15 @@ export const auth = betterAuth({
     provider: "postgresql", // or "mysql", "postgresql", ...etc
   }),
   plugins: [
+    admin({
+      defaultRole: "user",
+      adminRoles: ["admin"],
+      impersonationSessionDuration: 60 * 60 * 2, // 2 hours
+      defaultBanReason: "Violation of terms of service",
+      defaultBanExpiresIn: 60 * 60 * 24 * 7, // 1 week
+      bannedUserMessage:
+        "Your account has been suspended. Please contact support if you believe this is an error.",
+    }),
     organization({
       teams: {
         enabled: true,
