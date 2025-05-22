@@ -33,6 +33,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -183,7 +184,12 @@ export function DataTable<TData, TValue>({
                 <div className="flex items-center gap-2">
                   {getCellContent(row, "select")}
                   <CardTitle className="text-base">
-                    #{(row.original as any).id}
+                    <Link
+                      href={`/dashboard/tickets/${(row.original as any).id}`}
+                      className="text-primary hover:underline"
+                    >
+                      #{(row.original as any).id}
+                    </Link>
                   </CardTitle>
                 </div>
                 {getCellContent(row, "actions")}

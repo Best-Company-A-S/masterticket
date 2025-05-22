@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
+import Link from "next/link";
 
 export type Ticket = {
   id: string;
@@ -50,7 +51,14 @@ export const columns: ColumnDef<Ticket>[] = [
   {
     accessorKey: "id",
     header: "Ticket ID",
-    cell: ({ row }) => <div className="font-medium">#{row.getValue("id")}</div>,
+    cell: ({ row }) => (
+      <Link
+        href={`/dashboard/tickets/${row.getValue("id")}`}
+        className="font-medium text-primary hover:underline"
+      >
+        #{row.getValue("id")}
+      </Link>
+    ),
   },
   {
     accessorKey: "subject",
@@ -170,7 +178,9 @@ export const columns: ColumnDef<Ticket>[] = [
               Copy ticket ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View details</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`/dashboard/tickets/${ticket.id}`}>View details</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Edit ticket</DropdownMenuItem>
             <DropdownMenuItem>Add comment</DropdownMenuItem>
             <DropdownMenuItem className="text-destructive">
