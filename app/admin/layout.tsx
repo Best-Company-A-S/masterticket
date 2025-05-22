@@ -66,11 +66,6 @@ const adminMenuItems = [
     href: "/admin/create-user",
     icon: UserPlus,
   },
-  {
-    title: "Settings",
-    href: "/admin/settings",
-    icon: Settings,
-  },
 ];
 
 export default function AdminLayout({
