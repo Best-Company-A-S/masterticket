@@ -1,76 +1,54 @@
-"use client";
+import React from "react";
 
-import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-
-interface ShineTextProps {
+interface ShinyTextProps {
   text: string;
+  disabled?: boolean;
+  speed?: number;
   className?: string;
-  primaryColor?: string;
-  speed?: "slow" | "medium" | "fast";
-  repeat?: boolean;
 }
 
-export const ShineText = ({
+const ShinyText: React.FC<ShinyTextProps> = ({
   text,
-  className,
-  primaryColor = "rgb(var(--primary))",
-  speed = "medium",
-  repeat = true,
-}: ShineTextProps) => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Animation duration based on speed
-  const duration = {
-    slow: "4s",
-    medium: "2.5s",
-    fast: "1.5s",
-  };
-
-  if (!mounted)
-    return <span className={cn("inline-block", className)}>{text}</span>;
+  disabled = false,
+  speed = 5,
+  className = "",
+}) => {
+  const animationDuration = `${speed}s`;
 
   return (
-    <span className={cn("relative inline-block", className)}>
-      {/* Base text that adapts to theme */}
-      <span className="relative z-10">{text}</span>
-
-      {/* Shine overlay */}
-      <span
-        className="absolute inset-0 z-20 overflow-hidden"
-        aria-hidden="true"
-      >
-        <span
-          className="absolute inset-0 z-20"
-          style={{
-            backgroundImage: `linear-gradient(90deg, transparent, ${primaryColor}, transparent)`,
-            backgroundSize: "200% 100%",
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-            color: "transparent",
-            animation: `shine-effect ${duration[speed]} linear ${
-              repeat ? "infinite" : "1"
-            }`,
-          }}
-        >
-          {text}
-        </span>
-      </span>
-
-      <style jsx>{`
-        @keyframes shine-effect {
-          0% {
-            background-position: -200% center;
-          }
-          100% {
-            background-position: 200% center;
-          }
-        }
-      `}</style>
-    </span>
+    <div
+      className={`text-[#b5b5b5a4] bg-clip-text inline-block ${
+        disabled ? "" : "animate-shine"
+      } ${className}`}
+      style={{
+        backgroundImage:
+          "linear-gradient(120deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 60%)",
+        backgroundSize: "200% 100%",
+        WebkitBackgroundClip: "text",
+        animationDuration: animationDuration,
+      }}
+    >
+      {text}
+    </div>
   );
 };
+
+export default ShinyText;
+
+// tailwind.config.js
+// module.exports = {
+//   theme: {
+//     extend: {
+//       keyframes: {
+//         shine: {
+//           '0%': { 'background-position': '100%' },
+//           '100%': { 'background-position': '-100%' },
+//         },
+//       },
+//       animation: {
+//         shine: 'shine 5s linear infinite',
+//       },
+//     },
+//   },
+//   plugins: [],
+// };
