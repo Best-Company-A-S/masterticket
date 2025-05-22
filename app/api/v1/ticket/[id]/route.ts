@@ -55,20 +55,24 @@ export async function PUT(req: NextRequest) {
 }
 
 /* Get a ticket by id */
-export async function GET(req: NextRequest) {
-  const { id } = await req.json();
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const id = params.id;
 
   if (!id) {
-    return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Missing ticket ID" }, { status: 400 });
   }
 
   try {
     const ticket = await prisma.ticket.findUnique({
       where: { id },
     });
+
+    if (!ticket) {
+      return NextResponse.json({ error: "Ticket not found" }, { status: 404 });
+    }
 
     return NextResponse.json(ticket, { status: 200 });
   } catch (error) {

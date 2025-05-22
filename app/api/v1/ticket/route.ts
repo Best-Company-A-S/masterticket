@@ -46,11 +46,13 @@ export async function POST(req: NextRequest) {
 
 /* Get all tickets for an organization */
 export async function GET(req: NextRequest) {
-  const { organizationId } = await req.json();
+  // Get organizationId from URL search params
+  const url = new URL(req.url);
+  const organizationId = url.searchParams.get("organizationId");
 
   if (!organizationId) {
     return NextResponse.json(
-      { error: "Missing required fields" },
+      { error: "Missing organizationId parameter" },
       { status: 400 }
     );
   }

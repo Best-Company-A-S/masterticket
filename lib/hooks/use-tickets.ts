@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useOrganization } from "./use-organization";
+import axios from "axios";
 
 export enum TicketStatus {
   OPEN = "OPEN",
@@ -43,6 +44,13 @@ export interface UpdateTicketInput {
   status: TicketStatus;
 }
 
+// Create an axios instance with default config
+const api = axios.create({
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export function useTickets() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,25 +64,19 @@ export function useTickets() {
     setError(null);
 
     try {
-      const response = await fetch("/api/v1/ticket", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await api.get("/api/v1/ticket", {
+        params: {
           organizationId: activeOrganization.id,
-        }),
+        },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch tickets");
-      }
-
-      const data = await response.json();
-      setTickets(data);
-      return data;
+      setTickets(response.data);
+      return response.data;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      const errorMessage = axios.isAxiosError(err)
+        ? err.response?.data?.error || err.message
+        : "An error occurred";
+      setError(errorMessage);
       return null;
     } finally {
       setIsLoading(false);
@@ -86,22 +88,15 @@ export function useTickets() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/v1/ticket/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
-      });
+      // Use GET method with path parameter for fetching a single ticket
+      const response = await api.get(`/api/v1/ticket/${id}`);
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch ticket");
-      }
-
-      const data = await response.json();
-      return data;
+      return response.data;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      const errorMessage = axios.isAxiosError(err)
+        ? err.response?.data?.error || err.message
+        : "An error occurred";
+      setError(errorMessage);
       return null;
     } finally {
       setIsLoading(false);
@@ -116,26 +111,19 @@ export function useTickets() {
       setError(null);
 
       try {
-        const response = await fetch("/api/v1/ticket", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...input,
-            organizationId: activeOrganization.id,
-          }),
+        const response = await api.post("/api/v1/ticket", {
+          ...input,
+          organizationId: activeOrganization.id,
         });
 
-        if (!response.ok) {
-          throw new Error("Failed to create ticket");
-        }
-
-        const newTicket = await response.json();
+        const newTicket = response.data;
         setTickets((prev) => [...prev, newTicket]);
         return newTicket;
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
+        const errorMessage = axios.isAxiosError(err)
+          ? err.response?.data?.error || err.message
+          : "An error occurred";
+        setError(errorMessage);
         return null;
       } finally {
         setIsLoading(false);
@@ -149,19 +137,9 @@ export function useTickets() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/v1/ticket/${input.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
-      });
+      const response = await api.put(`/api/v1/ticket/${input.id}`, input);
 
-      if (!response.ok) {
-        throw new Error("Failed to update ticket");
-      }
-
-      const updatedTicket = await response.json();
+      const updatedTicket = response.data;
       setTickets((prev) =>
         prev.map((ticket) =>
           ticket.id === updatedTicket.id ? updatedTicket : ticket
@@ -169,7 +147,10 @@ export function useTickets() {
       );
       return updatedTicket;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      const errorMessage = axios.isAxiosError(err)
+        ? err.response?.data?.error || err.message
+        : "An error occurred";
+      setError(errorMessage);
       return null;
     } finally {
       setIsLoading(false);
@@ -181,23 +162,18 @@ export function useTickets() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/v1/ticket/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id }),
+      const response = await api.delete(`/api/v1/ticket/${id}`, {
+        data: { id },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to delete ticket");
-      }
-
-      const deletedTicket = await response.json();
+      const deletedTicket = response.data;
       setTickets((prev) => prev.filter((ticket) => ticket.id !== id));
       return deletedTicket;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      const errorMessage = axios.isAxiosError(err)
+        ? err.response?.data?.error || err.message
+        : "An error occurred";
+      setError(errorMessage);
       return null;
     } finally {
       setIsLoading(false);
