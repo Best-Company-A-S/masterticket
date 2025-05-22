@@ -90,14 +90,7 @@ const SessionsPage = () => {
       });
 
       if (!usersResponse || !usersResponse.data) {
-        // If we get a 403, it means the user doesn't have admin privileges
-        console.error(
-          "Admin access denied or invalid response:",
-          usersResponse
-        );
-        throw new Error(
-          "Access denied. You need admin privileges to view this data."
-        );
+        throw new Error("Invalid response from listUsers");
       }
 
       const users = (usersResponse.data as any).users || [];

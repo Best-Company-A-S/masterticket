@@ -66,7 +66,6 @@ interface User {
 interface RoleStats {
   admin: number;
   user: number;
-  superadmin: number;
   total: number;
 }
 
@@ -82,7 +81,6 @@ const RolesPage = () => {
   const [roleStats, setRoleStats] = useState<RoleStats>({
     admin: 0,
     user: 0,
-    superadmin: 0,
     total: 0,
   });
 
@@ -142,11 +140,13 @@ const RolesPage = () => {
   const calculateStats = () => {
     const stats = users.reduce(
       (acc, user) => {
-        acc[user.role as keyof RoleStats]++;
+        if (user.role === "admin" || user.role === "user") {
+          acc[user.role as keyof RoleStats]++;
+        }
         acc.total++;
         return acc;
       },
-      { admin: 0, user: 0, superadmin: 0, total: 0 }
+      { admin: 0, user: 0, total: 0 }
     );
 
     setRoleStats(stats);
@@ -176,8 +176,6 @@ const RolesPage = () => {
     switch (role) {
       case "admin":
         return "bg-blue-100 text-blue-800";
-      case "superadmin":
-        return "bg-purple-100 text-purple-800";
       case "user":
         return "bg-gray-100 text-gray-800";
       default:
@@ -189,8 +187,6 @@ const RolesPage = () => {
     switch (role) {
       case "admin":
         return Shield;
-      case "superadmin":
-        return Crown;
       case "user":
         return Users;
       default:
@@ -199,23 +195,16 @@ const RolesPage = () => {
   };
 
   const rolePermissions = {
-    superadmin: [
-      "Full system access",
-      "Manage all users",
+    admin: [
       "Access admin panel",
+      "Manage all users",
       "Create/delete users",
       "Ban/unban users",
       "Impersonate users",
       "View all sessions",
       "System configuration",
-    ],
-    admin: [
-      "Access admin panel",
-      "Manage users",
-      "Ban/unban users",
+      "User management",
       "View user sessions",
-      "Create users",
-      "Impersonate users",
     ],
     user: [
       "Access application",
@@ -262,20 +251,7 @@ const RolesPage = () => {
       </div>
 
       {/* Role Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-md">
-                <Crown className="h-5 w-5 text-purple-600" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">{roleStats.superadmin}</div>
-                <p className="text-xs text-muted-foreground">Super Admins</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
@@ -318,7 +294,7 @@ const RolesPage = () => {
       </div>
 
       {/* Permissions Overview */}
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2">
         {Object.entries(rolePermissions).map(([role, permissions]) => {
           const RoleIcon = getRoleIcon(role);
           return (
@@ -370,7 +346,6 @@ const RolesPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Roles</SelectItem>
-                  <SelectItem value="superadmin">Super Admin</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
                   <SelectItem value="user">User</SelectItem>
                 </SelectContent>
