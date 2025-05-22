@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
+import DeleteTicketDialog from "./delete-ticket-dialog";
 
 export type Ticket = {
   id: string;
@@ -177,11 +178,6 @@ export const columns: ColumnDef<Ticket>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(ticket.id)}
-            >
-              Copy ticket ID
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href={`/dashboard/tickets/${ticket.id}`}>View details</Link>
@@ -194,9 +190,16 @@ export const columns: ColumnDef<Ticket>[] = [
                 </div>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Add comment</DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive">
-              Delete ticket
+            <DropdownMenuItem asChild className="text-red-500 cursor-pointer">
+              <DeleteTicketDialog
+                ticketId={ticket.id}
+                ticketSubject={ticket.subject}
+                variant="menu-item"
+                onDeleted={() => {
+                  // Force reload of the tickets page to refresh the list
+                  window.location.reload();
+                }}
+              />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -11,6 +11,7 @@ import { useTickets, Ticket } from "@/lib/hooks/use-tickets";
 import { formatDistanceToNow } from "date-fns";
 import CommentSection from "@/components/tickets/comment-section";
 import EditTicketModal from "@/components/tickets/edit-ticket-modal";
+import DeleteTicketDialog from "@/components/tickets/delete-ticket-dialog";
 
 export default function TicketDetailsPage() {
   const params = useParams();
@@ -118,11 +119,17 @@ export default function TicketDetailsPage() {
           <h1 className="text-2xl font-bold">Ticket Details</h1>
         </div>
         {ticket && (
-          <EditTicketModal
-            ref={editModalRef}
-            ticket={ticket}
-            onTicketUpdated={handleTicketUpdated}
-          />
+          <div className="flex items-center gap-2">
+            <EditTicketModal
+              ref={editModalRef}
+              ticket={ticket}
+              onTicketUpdated={handleTicketUpdated}
+            />
+            <DeleteTicketDialog
+              ticketId={ticket.id}
+              ticketSubject={ticket.title}
+            />
+          </div>
         )}
       </div>
 
