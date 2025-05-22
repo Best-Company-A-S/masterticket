@@ -3,6 +3,7 @@
 import TicketBarChart from "@/components/tickets/ticket-bar-chart";
 import TicketLineChartCard from "@/components/tickets/ticket-line-chart";
 import TicketStatsCard from "@/components/tickets/ticket-stats-card";
+import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-client";
 import { useOrganization } from "@/lib/hooks/use-organization";
 import { useTickets, TicketStatus } from "@/lib/hooks/use-tickets";
@@ -68,17 +69,22 @@ export default function DashboardPage() {
         </div>
       ) : (
         <div className="flex flex-col items-start gap-10">
-          <div className="flex items-start justify-center">
-            <div className="flex flex-col gap-2">
-              <h1 className="text-4xl font-bold">Dashboard</h1>
-              <p className="text-sm text-gray-500">
-                Welcome, {session?.user?.name}! You are viewing the dashboard
-                for{" "}
-                <span className="font-bold text-primary">
-                  {activeOrganization?.name}
-                </span>
-                .
-              </p>
+          <div className="flex items-start justify-center w-full">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex flex-col gap-2">
+                <h1 className="text-4xl font-bold">Dashboard</h1>
+                <p className="text-sm text-gray-500">
+                  Welcome, {session?.user?.name}! You are viewing the dashboard
+                  for{" "}
+                  <span className="font-bold text-primary">
+                    {activeOrganization?.name}
+                  </span>
+                  .
+                </p>
+              </div>
+              <div className="hidden lg:block">
+                <Button>Create Ticket</Button>
+              </div>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
