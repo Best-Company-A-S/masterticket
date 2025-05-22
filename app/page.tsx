@@ -377,9 +377,9 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="container mx-auto px-4 py-8 border-t">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-8">
-          <div className="max-w-lg">
+      <footer className="container mx-auto px-4 py-12 border-t">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
             <h3 className="font-bold text-lg mb-4">MasterTicket</h3>
             <p className="text-muted-foreground">
               Open source ticket management system powered by AI.
@@ -387,8 +387,8 @@ export default function Home() {
           </div>
 
           <div>
-            <h3 className="font-bold text-lg mb-2">Links</h3>
-            <ul className="flex items-center gap-2 ">
+            <h3 className="font-bold mb-4">Product</h3>
+            <ul className="space-y-2">
               <li>
                 <Link
                   href="#features"
@@ -397,6 +397,7 @@ export default function Home() {
                   Features
                 </Link>
               </li>
+
               <li>
                 <Link
                   href="/roadmap"
@@ -405,11 +406,61 @@ export default function Home() {
                   Roadmap
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold mb-4">Resources</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="/docs"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/api"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  API Reference
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Blog
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-bold mb-4">Company</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link
+                  href="/about"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Contact
+                </Link>
+              </li>
               <li>
                 <Link
                   href="https://github.com/yourusername/masterticket"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground"
                 >
                   GitHub
@@ -419,22 +470,34 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center pt-6 border-t">
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t">
           <p className="text-sm text-muted-foreground">
             © 2024 MasterTicket. Open source project.
           </p>
           <div className="flex gap-6 mt-4 md:mt-0">
             <Link
-              href="/dashboard"
+              href="/login"
               className="text-sm text-muted-foreground hover:text-foreground"
             >
-              Dashboard
+              Login
             </Link>
             <Link
               href="/register"
               className="text-sm text-muted-foreground hover:text-foreground"
             >
               Register
+            </Link>
+            <Link
+              href="/privacy"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/terms"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Terms
             </Link>
           </div>
         </div>

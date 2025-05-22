@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { useTheme } from "next-themes";
 import {
   Card,
   CardContent,
@@ -28,12 +29,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
-import { CheckCircle, Trash } from "lucide-react";
+import { CheckCircle, Moon, Sun, Trash } from "lucide-react";
 
 export default function SettingsPage() {
   const { activeOrganization, isLoading } = useOrganization();
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
 
   const [organizationName, setOrganizationName] = useState(
     activeOrganization?.name || ""
@@ -139,6 +148,14 @@ export default function SettingsPage() {
     }
   };
 
+  // Handle theme change
+  const handleThemeChange = (newTheme: string) => {
+    setTheme(newTheme);
+    toast.success("Theme updated", {
+      description: `Theme has been changed to ${newTheme}.`,
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -205,6 +222,46 @@ export default function SettingsPage() {
               {isSaving ? "Saving..." : "Save Changes"}
             </Button>
           </CardFooter>
+        </Card>
+
+        {/* Appearance Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Appearance</CardTitle>
+            <CardDescription>
+              Customize the look and feel of the application
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="theme">Theme</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Choose between light, dark, or system theme
+                  </p>
+                </div>
+                <Select value={theme} onValueChange={handleThemeChange}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select theme" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="light">
+                      <div className="flex items-center gap-2">
+                        <Sun className="h-4 w-4" /> Light
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="dark">
+                      <div className="flex items-center gap-2">
+                        <Moon className="h-4 w-4" /> Dark
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="system">System</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
         </Card>
 
         {/* Notification Settings */}
