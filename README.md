@@ -2,7 +2,7 @@
 
 MasterTicket is a comprehensive ticket management system built with Next.js 15, Prisma, and PostgreSQL. It enables organizations to efficiently track, manage, and resolve support tickets with a beautiful UI and powerful features.
 
-![MasterTicket Dashboard](https://via.placeholder.com/800x400?text=MasterTicket+Dashboard)
+![MasterTicket Dashboard](https://github.com/Best-Company-A-S/masterticket/blob/main/screenshot)
 
 ## 🚀 Features
 
