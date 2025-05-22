@@ -78,11 +78,6 @@ export function AppSidebar() {
       icon: FaRobot,
     },
     {
-      title: "Notifications",
-      href: "/dashboard/notifications",
-      icon: Bell,
-    },
-    {
       title: "Teams",
       href: "/dashboard/teams",
       icon: Users,

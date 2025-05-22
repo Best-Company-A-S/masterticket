@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import TicketAssistant from "@/components/ai/ticket-assistant";
 import {
   Card,
@@ -10,12 +11,31 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
 
 export default function AIAssistantPage() {
   const [activeTab, setActiveTab] = useState("chat");
+  const searchParams = useSearchParams();
   const ticketAssistantRef = useRef<{
     sendMessage: (message: string) => void;
   } | null>(null);
+  const processedQueryRef = useRef<string | null>(null);
+
+  // Process URL query parameter on mount
+  useEffect(() => {
+    const query = searchParams.get("q");
+    if (
+      query &&
+      ticketAssistantRef.current &&
+      processedQueryRef.current !== query
+    ) {
+      processedQueryRef.current = query;
+      // Short delay to ensure component is fully initialized
+      setTimeout(() => {
+        ticketAssistantRef.current?.sendMessage(decodeURIComponent(query));
+      }, 500);
+    }
+  }, [searchParams]);
 
   const handleQuickAction = (message: string) => {
     if (ticketAssistantRef.current) {
@@ -84,6 +104,44 @@ export default function AIAssistantPage() {
 
               <Card>
                 <CardHeader>
+                  <CardTitle>Direct Link</CardTitle>
+                  <CardDescription>
+                    Share AI assistant with a pre-filled query
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      You can link directly to the AI assistant with a search
+                      query:
+                    </p>
+                  </div>
+
+                  <div>
+                    <div className="space-y-2">
+                      <code className="bg-muted p-2 rounded-md block text-xs overflow-auto">
+                        /dashboard/ai-assistant?q=find tickets about login
+                        issues
+                      </code>
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-2 flex flex-col">
+                      <p>Use this as a bang shortcut in your browser:</p>
+                      <Link
+                        href="https://ignis-sage.vercel.app/"
+                        className="text-primary hover:underline"
+                      >
+                        Learn more about setting up browser shortcuts →
+                      </Link>
+                      <p className="text-xs mt-2 text-muted-foreground">
+                        powered by Ignis Search 🔥
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
                   <CardTitle>Tips</CardTitle>
                   <CardDescription>
                     Get the most out of the AI assistant
@@ -142,6 +200,10 @@ export default function AIAssistantPage() {
                   <li>
                     Search by keyword: "Find tickets related to payment
                     processing"
+                  </li>
+                  <li>
+                    Direct link:{" "}
+                    <code>/dashboard/ai-assistant?q=find critical tickets</code>
                   </li>
                 </ul>
               </div>

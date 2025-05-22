@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center h-screen w-full">
       <Link href="/dashboard">
         <Button variant="ghost">
           <ShineText text="Dashboard" disabled={false} speed={3} />

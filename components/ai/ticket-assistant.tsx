@@ -112,7 +112,9 @@ const TicketAssistant = forwardRef<TicketAssistantRef, TicketAssistantProps>(
             content:
               "Unable to process your request. Organization data is not available.",
             timestamp: new Date(),
-            id: `error-${Date.now()}`,
+            id: `error-${Date.now()}-${Math.random()
+              .toString(36)
+              .substring(2, 9)}`,
           },
         ]);
         return;
@@ -122,7 +124,7 @@ const TicketAssistant = forwardRef<TicketAssistantRef, TicketAssistantProps>(
         role: "user",
         content: messageToSend,
         timestamp: new Date(),
-        id: `user-${Date.now()}`,
+        id: `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
       };
 
       // Add user message to chat
@@ -136,7 +138,9 @@ const TicketAssistant = forwardRef<TicketAssistantRef, TicketAssistantProps>(
           content: "",
           timestamp: new Date(),
           isLoading: true,
-          id: `loading-${Date.now()}`,
+          id: `loading-${Date.now()}-${Math.random()
+            .toString(36)
+            .substring(2, 9)}`,
         },
       ]);
 
@@ -186,7 +190,9 @@ const TicketAssistant = forwardRef<TicketAssistantRef, TicketAssistantProps>(
             role: "assistant",
             content: formattedResponse,
             timestamp: new Date(),
-            id: `assistant-${Date.now()}`,
+            id: `assistant-${Date.now()}-${Math.random()
+              .toString(36)
+              .substring(2, 9)}`,
           },
         ]);
       } catch (error) {
@@ -199,7 +205,9 @@ const TicketAssistant = forwardRef<TicketAssistantRef, TicketAssistantProps>(
             role: "assistant",
             content: "Sorry, I encountered an error. Please try again later.",
             timestamp: new Date(),
-            id: `error-${Date.now()}`,
+            id: `error-${Date.now()}-${Math.random()
+              .toString(36)
+              .substring(2, 9)}`,
           },
         ]);
       }
