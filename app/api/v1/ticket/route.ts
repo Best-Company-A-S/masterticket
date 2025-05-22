@@ -58,13 +58,66 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    // Get tickets with their comments
     const tickets = await prisma.ticket.findMany({
       where: {
         organizationId,
       },
+      include: {
+        comments: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
     });
 
-    return NextResponse.json(tickets, { status: 200 });
+    // Calculate response times for tickets that have comments
+    const ticketsWithResponseTime = tickets.map((ticket) => {
+      const firstComment = ticket.comments[0];
+      let responseTime = null;
+
+      if (firstComment) {
+        // Calculate response time in hours
+        const createdAt = new Date(ticket.createdAt);
+        const firstResponseAt = new Date(firstComment.createdAt);
+        const diffInMs = firstResponseAt.getTime() - createdAt.getTime();
+        const diffInHours = diffInMs / (1000 * 60 * 60);
+        responseTime = diffInHours;
+      }
+
+      // Return ticket with response time and without comments to reduce payload size
+      const { comments, ...ticketWithoutComments } = ticket;
+      return {
+        ...ticketWithoutComments,
+        responseTime,
+      };
+    });
+
+    // Calculate average response time
+    const ticketsWithResponses = ticketsWithResponseTime.filter(
+      (t) => t.responseTime !== null
+    );
+    const totalResponseTime = ticketsWithResponses.reduce(
+      (sum, ticket) => sum + (ticket.responseTime || 0),
+      0
+    );
+    const averageResponseTime =
+      ticketsWithResponses.length > 0
+        ? totalResponseTime / ticketsWithResponses.length
+        : null;
+
+    return NextResponse.json(
+      {
+        tickets: ticketsWithResponseTime,
+        stats: {
+          averageResponseTime,
+          totalTickets: tickets.length,
+          respondedTickets: ticketsWithResponses.length,
+        },
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("[TICKET_GET]", error);
     return NextResponse.json(

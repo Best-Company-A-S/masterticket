@@ -87,7 +87,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar>
+    <Sidebar className="bg-background">
       <SidebarHeader>
         <div className="flex w-full items-center justify-between">
           <DropdownMenu>

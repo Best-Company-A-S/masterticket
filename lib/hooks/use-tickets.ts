@@ -27,6 +27,13 @@ export interface Ticket {
   createdAt: Date;
   updatedAt: Date;
   organizationId: string;
+  responseTime?: number | null;
+}
+
+export interface TicketStats {
+  averageResponseTime: number | null;
+  totalTickets: number;
+  respondedTickets: number;
 }
 
 export interface CreateTicketInput {
@@ -56,6 +63,11 @@ export function useTickets() {
   const [error, setError] = useState<string | null>(null);
   const { activeOrganization } = useOrganization();
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [stats, setStats] = useState<TicketStats>({
+    averageResponseTime: null,
+    totalTickets: 0,
+    respondedTickets: 0,
+  });
 
   const getTickets = useCallback(async () => {
     if (!activeOrganization) return;
@@ -64,14 +76,20 @@ export function useTickets() {
     setError(null);
 
     try {
+      // Use GET method with query parameters for fetching tickets
       const response = await api.get("/api/v1/ticket", {
         params: {
           organizationId: activeOrganization.id,
         },
       });
 
-      setTickets(response.data);
-      return response.data;
+      // Handle new response format with tickets and stats
+      const { tickets: fetchedTickets, stats: fetchedStats } = response.data;
+
+      setTickets(fetchedTickets);
+      setStats(fetchedStats);
+
+      return { tickets: fetchedTickets, stats: fetchedStats };
     } catch (err) {
       const errorMessage = axios.isAxiosError(err)
         ? err.response?.data?.error || err.message
@@ -118,6 +136,13 @@ export function useTickets() {
 
         const newTicket = response.data;
         setTickets((prev) => [...prev, newTicket]);
+
+        // Update stats
+        setStats((prev) => ({
+          ...prev,
+          totalTickets: prev.totalTickets + 1,
+        }));
+
         return newTicket;
       } catch (err) {
         const errorMessage = axios.isAxiosError(err)
@@ -168,6 +193,13 @@ export function useTickets() {
 
       const deletedTicket = response.data;
       setTickets((prev) => prev.filter((ticket) => ticket.id !== id));
+
+      // Update stats
+      setStats((prev) => ({
+        ...prev,
+        totalTickets: prev.totalTickets - 1,
+      }));
+
       return deletedTicket;
     } catch (err) {
       const errorMessage = axios.isAxiosError(err)
@@ -182,6 +214,7 @@ export function useTickets() {
 
   return {
     tickets,
+    stats,
     isLoading,
     error,
     getTickets,

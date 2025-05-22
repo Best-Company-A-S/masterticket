@@ -11,7 +11,7 @@ import { useEffect } from "react";
 export default function DashboardPage() {
   const { data: session } = useSession();
   const { activeOrganization } = useOrganization();
-  const { tickets, isLoading, error, getTickets } = useTickets();
+  const { tickets, stats, isLoading, error, getTickets } = useTickets();
 
   useEffect(() => {
     if (activeOrganization) {
@@ -30,8 +30,11 @@ export default function DashboardPage() {
     (ticket) => ticket.status === TicketStatus.CLOSED
   );
 
-  // Calculate average response time (placeholder - would need actual response time data)
-  const avgResponseTime = 24; // hours (placeholder)
+  // Format average response time for display (round to 1 decimal place)
+  const avgResponseTime =
+    stats.averageResponseTime !== null
+      ? Math.round(stats.averageResponseTime * 10) / 10
+      : 0;
 
   // Group tickets by status for bar chart
   const ticketsByStatus = Object.values(TicketStatus).map((status) => ({
@@ -81,14 +84,14 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
             <TicketStatsCard
               title="Total Tickets"
-              value={tickets.length}
+              value={stats.totalTickets}
               description="Total number of tickets in the organization"
             />
 
             <TicketStatsCard
               title="Avg. Response Time"
               value={avgResponseTime}
-              description="Average response time in hours"
+              description={`Based on ${stats.respondedTickets} responded tickets`}
               unit="h"
             />
 
