@@ -115,10 +115,7 @@ const TicketBarChart = ({ title, description, data }: TicketBarChartProps) => {
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
-        >
+        <ChartContainer config={chartConfig}>
           <PieChart>
             <ChartTooltip
               cursor={false}

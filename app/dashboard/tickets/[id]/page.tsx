@@ -228,7 +228,7 @@ export default function TicketDetailsPage() {
                           >
                             <Sparkles className="h-3 w-3" />
                             {isSummarizing ? (
-                              <div className="flex items-center">
+                              <div className="flex items-center gap-2">
                                 <ShinyText
                                   text="Summarizing"
                                   speed={3}
