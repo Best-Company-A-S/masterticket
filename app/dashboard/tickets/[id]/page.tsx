@@ -16,6 +16,7 @@ export default function TicketDetailsPage() {
   const router = useRouter();
   const { getTicket, isLoading, error } = useTickets();
   const [ticket, setTicket] = useState<Ticket | null>(null);
+  const [commentCount, setCommentCount] = useState(0);
 
   useEffect(() => {
     const fetchTicket = async () => {
@@ -23,12 +24,18 @@ export default function TicketDetailsPage() {
         const result = await getTicket(params.id as string);
         if (result) {
           setTicket(result);
+          setCommentCount((result as any).commentCount || 0);
         }
       }
     };
 
     fetchTicket();
   }, [params.id, getTicket]);
+
+  // Handle comment count updates
+  const handleCommentCountChange = (count: number) => {
+    setCommentCount(count);
+  };
 
   // Format response time from hours to a readable format
   const formatResponseTime = (hours: number | null): string => {
@@ -142,7 +149,7 @@ export default function TicketDetailsPage() {
                       <MessageSquare className="h-4 w-4 text-muted-foreground" />
                       <div>
                         <div className="text-sm font-medium">Comments</div>
-                        <div>{(ticket as any).commentCount || 0} comments</div>
+                        <div>{commentCount} comments</div>
                       </div>
                     </div>
                   </div>
@@ -153,7 +160,10 @@ export default function TicketDetailsPage() {
 
           <div>
             <h2 className="text-xl font-semibold mb-4">Comments</h2>
-            <CommentSection ticketId={ticket.id} />
+            <CommentSection
+              ticketId={ticket.id}
+              onCommentCountChange={handleCommentCountChange}
+            />
           </div>
         </div>
       ) : (

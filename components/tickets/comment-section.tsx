@@ -27,6 +27,7 @@ interface Comment {
 
 interface CommentSectionProps {
   ticketId: string;
+  onCommentCountChange?: (count: number) => void;
 }
 
 // Memoized CommentItem component to prevent unnecessary re-renders
@@ -163,7 +164,10 @@ const CommentItem = memo(
 
 CommentItem.displayName = "CommentItem";
 
-export default function CommentSection({ ticketId }: CommentSectionProps) {
+export default function CommentSection({
+  ticketId,
+  onCommentCountChange,
+}: CommentSectionProps) {
   const { data: session } = useSession();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
@@ -181,6 +185,10 @@ export default function CommentSection({ ticketId }: CommentSectionProps) {
         if (response.ok) {
           const data = await response.json();
           setComments(data);
+          // Update comment count in parent component
+          if (onCommentCountChange) {
+            onCommentCountChange(data.length);
+          }
         } else {
           toast.error("Failed to load comments");
         }
@@ -193,7 +201,7 @@ export default function CommentSection({ ticketId }: CommentSectionProps) {
     };
 
     fetchComments();
-  }, [ticketId]);
+  }, [ticketId, onCommentCountChange]);
 
   // Handle reply button click
   const handleReplyClick = (commentId: string) => {
@@ -228,7 +236,14 @@ export default function CommentSection({ ticketId }: CommentSectionProps) {
 
       if (response.ok) {
         const comment = await response.json();
-        setComments((prevComments) => [...prevComments, comment]);
+        const updatedComments = [...comments, comment];
+        setComments(updatedComments);
+
+        // Update comment count in parent component
+        if (onCommentCountChange) {
+          onCommentCountChange(updatedComments.length);
+        }
+
         if (replyTo) {
           setReplyContent("");
           setReplyTo(null);
