@@ -45,6 +45,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import { CreateOrganizationModal } from "@/components/organization/create-organization-modal";
 import { FaRobot } from "react-icons/fa";
+import { ProfileDialog } from "@/components/user/profile-dialog";
 
 type NavItem = {
   title: string;
@@ -59,6 +60,7 @@ export function AppSidebar() {
   const { data: organizations } = authClient.useListOrganizations();
   const { data: session } = authClient.useSession();
   const [showCreateOrgModal, setShowCreateOrgModal] = useState(false);
+  const [showProfileDialog, setShowProfileDialog] = useState(false);
 
   // Navigation items
   const navItems: NavItem[] = [
@@ -220,14 +222,12 @@ export function AppSidebar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem asChild>
-              <Link
-                href="/dashboard/profile"
-                className="flex items-center gap-2"
-              >
-                <User2 className="h-4 w-4" />
-                <span>Profile</span>
-              </Link>
+            <DropdownMenuItem
+              onSelect={() => setShowProfileDialog(true)}
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <User2 className="h-4 w-4" />
+              <span>Profile</span>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
@@ -239,7 +239,13 @@ export function AppSidebar() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="flex items-center gap-2 text-destructive focus:text-destructive">
+            <DropdownMenuItem
+              className="flex items-center gap-2 text-destructive focus:text-destructive cursor-pointer"
+              onSelect={() => {
+                authClient.signOut();
+                window.location.href = "/login";
+              }}
+            >
               <LogOut className="h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>
@@ -250,6 +256,11 @@ export function AppSidebar() {
       <CreateOrganizationModal
         isOpen={showCreateOrgModal}
         onClose={() => setShowCreateOrgModal(false)}
+      />
+
+      <ProfileDialog
+        isOpen={showProfileDialog}
+        onClose={() => setShowProfileDialog(false)}
       />
     </Sidebar>
   );
