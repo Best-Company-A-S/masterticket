@@ -9,6 +9,7 @@ import { TicketFilters } from "@/components/tickets/ticket-filters";
 import { PlusCircle, Clock } from "lucide-react";
 import { useTickets, Ticket as ApiTicket } from "@/lib/hooks/use-tickets";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CreateTicketModal from "@/components/tickets/create-ticket-modal";
 
 export default function TicketsPage() {
   const { tickets, stats, isLoading, error, getTickets } = useTickets();
@@ -63,6 +64,11 @@ export default function TicketsPage() {
     setSearchTerm(term);
   };
 
+  // Handle ticket creation
+  const handleTicketCreated = () => {
+    getTickets();
+  };
+
   // Filter handlers
   const handleStatusFilter = (statuses: string[]) => {
     if (!tickets) return;
@@ -101,10 +107,7 @@ export default function TicketsPage() {
           </p>
         </div>
         <div className="hidden lg:flex items-center gap-2">
-          <Button className="flex items-center gap-2">
-            <PlusCircle className="h-4 w-4" />
-            Create Ticket
-          </Button>
+          <CreateTicketModal onTicketCreated={handleTicketCreated} />
         </div>
       </div>
 
@@ -119,17 +122,19 @@ export default function TicketsPage() {
         />
       </div>
 
-      {isLoading ? (
-        <div className="flex justify-center p-8">Loading tickets...</div>
-      ) : error ? (
-        <div className="text-red-500 p-8">{error}</div>
-      ) : (
-        <DataTable
-          columns={columns}
-          data={filteredData}
-          searchTerm={searchTerm}
-        />
-      )}
+      <div className="mt-5">
+        {isLoading ? (
+          <div className="flex justify-center p-8">Loading tickets...</div>
+        ) : error ? (
+          <div className="text-red-500 p-8">{error}</div>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={filteredData}
+            searchTerm={searchTerm}
+          />
+        )}
+      </div>
     </div>
   );
 }

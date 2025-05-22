@@ -8,6 +8,7 @@ import { useSession } from "@/lib/auth-client";
 import { useOrganization } from "@/lib/hooks/use-organization";
 import { useTickets, TicketStatus } from "@/lib/hooks/use-tickets";
 import { useEffect } from "react";
+import CreateTicketModal from "@/components/tickets/create-ticket-modal";
 
 export default function DashboardPage() {
   const { data: session } = useSession();
@@ -57,6 +58,11 @@ export default function DashboardPage() {
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
+  // Handle ticket creation
+  const handleTicketCreated = () => {
+    getTickets();
+  };
+
   return (
     <div className="p-6">
       {isLoading ? (
@@ -83,7 +89,7 @@ export default function DashboardPage() {
                 </p>
               </div>
               <div className="hidden lg:block">
-                <Button>Create Ticket</Button>
+                <CreateTicketModal onTicketCreated={handleTicketCreated} />
               </div>
             </div>
           </div>

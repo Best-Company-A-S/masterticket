@@ -31,7 +31,6 @@ export async function POST(req: NextRequest) {
         priority,
         status,
         organizationId,
-        responseTime: null,
       },
     });
 
