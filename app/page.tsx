@@ -364,7 +364,7 @@ export default function Home() {
               </Button>
             </Link>
             <Link
-              href="https://github.com/yourusername/masterticket"
+              href="https://github.com/Best-Company-A-S/masterticket"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -460,7 +460,7 @@ export default function Home() {
               </li>
               <li>
                 <Link
-                  href="https://github.com/yourusername/masterticket"
+                  href="https://github.com/Best-Company-A-S/masterticket"
                   className="text-muted-foreground hover:text-foreground"
                 >
                   GitHub

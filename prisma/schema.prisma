@@ -88,35 +88,56 @@ model Organization {
   invitations Invitation[]
   sessions    Session[]
   tickets     Ticket[]
+  teams       Team[]
 }
 
 model Member {
   id             String       @id @default(cuid())
   userId         String
   organizationId String
+  teamId         String?
   role           String
   createdAt      DateTime     @default(now())
   
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  team         Team?        @relation(fields: [teamId], references: [id], onDelete: SetNull)
   
   @@unique([userId, organizationId])
 }
 
 model Invitation {
   id             String   @id @default(cuid())
-  email          String
+  email          String?
+  code           String?  @unique
   inviterId      String
   organizationId String
+  teamId         String?
   role           String
   status         String
+  metadata       Json?
   expiresAt      DateTime
   createdAt      DateTime @default(now())
   
   inviter      User         @relation("inviter", fields: [inviterId], references: [id], onDelete: Cascade)
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  team         Team?        @relation(fields: [teamId], references: [id], onDelete: SetNull)
   
   @@unique([email, organizationId])
+}
+
+model Team {
+  id             String   @id @default(cuid())
+  name           String
+  organizationId String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  members      Member[]
+  invitations  Invitation[]
+  
+  @@unique([name, organizationId])
 }
 
 enum TicketStatus {

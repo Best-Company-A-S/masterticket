@@ -45,7 +45,45 @@ export function useOrganization(options: UseOrganizationOptions = {}) {
   const { data: activeOrganization, isPending: isLoadingActiveOrg } =
     authClient.useActiveOrganization();
 
+  // Get current user's member information for the active organization
+  const [activeMember, setActiveMember] = useState<any>(null);
+  const [isLoadingActiveMember, setIsLoadingActiveMember] = useState(false);
+
   const [showCreateOrgModal, setShowCreateOrgModal] = useState(false);
+
+  // Fetch active member information
+  useEffect(() => {
+    async function fetchActiveMember() {
+      if (!session?.user?.id || !activeOrganization?.id) {
+        setActiveMember(null);
+        return;
+      }
+
+      setIsLoadingActiveMember(true);
+      try {
+        const response = await fetch(
+          `/api/organization/member-info?organizationId=${activeOrganization.id}`,
+          {
+            credentials: "include",
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setActiveMember(data.member);
+        } else {
+          setActiveMember(null);
+        }
+      } catch (error) {
+        console.error("Error fetching active member:", error);
+        setActiveMember(null);
+      } finally {
+        setIsLoadingActiveMember(false);
+      }
+    }
+
+    fetchActiveMember();
+  }, [session?.user?.id, activeOrganization?.id]);
 
   useEffect(() => {
     // If authentication is required but user is not authenticated and session loading is complete
@@ -102,13 +140,36 @@ export function useOrganization(options: UseOrganizationOptions = {}) {
     onOrganizationLoaded,
   ]);
 
+  // Helper functions for role checking
+  const hasRole = (roles: string | string[]) => {
+    if (!activeMember?.role) return false;
+    const userRoles = activeMember.role.split(",");
+    const requiredRoles = Array.isArray(roles) ? roles : [roles];
+    return requiredRoles.some((role) => userRoles.includes(role));
+  };
+
+  const isOwner = () => hasRole("owner");
+  const isAdmin = () => hasRole(["owner", "admin"]);
+  const isMember = () => hasRole(["owner", "admin", "member"]);
+
   return {
     session,
     organizations,
     activeOrganization,
-    isLoading: isLoadingSession || isLoadingOrgs || isLoadingActiveOrg,
+    activeMember,
+    isLoading:
+      isLoadingSession ||
+      isLoadingOrgs ||
+      isLoadingActiveOrg ||
+      isLoadingActiveMember,
     showCreateOrgModal,
     setShowCreateOrgModal,
+    // Role checking helpers
+    hasRole,
+    isOwner,
+    isAdmin,
+    isMember,
+    userRole: activeMember?.role,
     selectOrganization: (organizationId: string) => {
       return authClient.organization.setActive({
         organizationId,
