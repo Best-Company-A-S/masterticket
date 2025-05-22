@@ -46,6 +46,13 @@ import { authClient } from "@/lib/auth-client";
 import { CreateOrganizationModal } from "@/components/organization/create-organization-modal";
 import { FaRobot } from "react-icons/fa";
 
+type NavItem = {
+  title: string;
+  href: string;
+  icon: React.ElementType;
+  badge?: string;
+};
+
 export function AppSidebar() {
   const pathname = usePathname();
   const { data: activeOrganization } = authClient.useActiveOrganization();
@@ -54,7 +61,7 @@ export function AppSidebar() {
   const [showCreateOrgModal, setShowCreateOrgModal] = useState(false);
 
   // Navigation items
-  const navItems = [
+  const navItems: NavItem[] = [
     {
       title: "Dashboard",
       href: "/dashboard",
