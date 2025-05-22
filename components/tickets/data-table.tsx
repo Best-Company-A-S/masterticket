@@ -23,7 +23,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   DropdownMenu,
@@ -38,11 +37,13 @@ import { cn } from "@/lib/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  searchTerm?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  searchTerm = "",
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -51,6 +52,13 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  // Set search term from parent component
+  React.useEffect(() => {
+    if (searchTerm && table.getColumn("subject")) {
+      table.getColumn("subject")?.setFilterValue(searchTerm);
+    }
+  }, [searchTerm]);
 
   const table = useReactTable({
     data,
@@ -82,18 +90,10 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full">
-      <div className="flex flex-col sm:flex-row items-center py-4 gap-2">
-        <Input
-          placeholder="Filter by subject..."
-          value={(table.getColumn("subject")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("subject")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm w-full"
-        />
+      <div className="flex flex-col sm:flex-row items-center py-4 gap-2 justify-end">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="sm:ml-auto">
+            <Button variant="outline">
               Columns <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>

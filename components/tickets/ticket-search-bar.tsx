@@ -4,8 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-const TicketSearchBar = () => {
+interface TicketSearchBarProps {
+  onSearch?: (searchTerm: string) => void;
+}
+
+const TicketSearchBar = ({ onSearch }: TicketSearchBarProps) => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
 
   // Handle keyboard shortcut
@@ -32,6 +37,13 @@ const TicketSearchBar = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // Handle search input changes
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    onSearch?.(value);
+  };
+
   return (
     <div className="relative w-full">
       <div className="relative">
@@ -44,7 +56,9 @@ const TicketSearchBar = () => {
           ref={searchRef}
           variant="search"
           placeholder="Search tickets..."
-          className="w-full"
+          className="w-full pl-9"
+          value={searchTerm}
+          onChange={handleSearchChange}
           onFocus={() => setIsSearchFocused(true)}
           onBlur={() => setIsSearchFocused(false)}
         />

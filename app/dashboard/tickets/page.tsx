@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function TicketsPage() {
   const { tickets, stats, isLoading, error, getTickets } = useTickets();
   const [filteredData, setFilteredData] = useState<UITicket[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Map API tickets to UI tickets format
   const mapApiTicketsToUiTickets = (apiTickets: ApiTicket[]): UITicket[] => {
@@ -56,6 +57,11 @@ export default function TicketsPage() {
       setFilteredData(uiTickets);
     }
   }, [tickets]);
+
+  // Handle search
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
 
   // Filter handlers
   const handleStatusFilter = (statuses: string[]) => {
@@ -103,7 +109,7 @@ export default function TicketsPage() {
       </div>
 
       <div className="mt-5">
-        <TicketSearchBar />
+        <TicketSearchBar onSearch={handleSearch} />
       </div>
 
       <div className="mt-5">
@@ -113,15 +119,17 @@ export default function TicketsPage() {
         />
       </div>
 
-      <div className="mt-5">
-        {isLoading ? (
-          <div className="flex justify-center p-8">Loading tickets...</div>
-        ) : error ? (
-          <div className="text-red-500 p-8">{error}</div>
-        ) : (
-          <DataTable columns={columns} data={filteredData} />
-        )}
-      </div>
+      {isLoading ? (
+        <div className="flex justify-center p-8">Loading tickets...</div>
+      ) : error ? (
+        <div className="text-red-500 p-8">{error}</div>
+      ) : (
+        <DataTable
+          columns={columns}
+          data={filteredData}
+          searchTerm={searchTerm}
+        />
+      )}
     </div>
   );
 }
