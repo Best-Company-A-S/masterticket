@@ -1,9 +1,19 @@
 "use client";
 
-import { useOrganization } from "@/lib/hooks/use-organization";
-import { authClient } from "@/lib/auth-client";
-import { useState, useEffect } from "react";
 import { useTeamContext } from "@/components/organization/team-context";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,7 +21,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -20,6 +29,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -37,42 +53,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { authClient } from "@/lib/auth-client";
+import { useOrganization } from "@/lib/hooks/use-organization";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import {
-  Users,
-  Plus,
-  Settings,
-  UserPlus,
   Copy,
-  MoreVertical,
-  Trash2,
   Crown,
+  MoreVertical,
+  Plus,
   ShieldCheck,
+  Trash2,
   User,
-  UserMinus,
   UserCheck,
-  ChevronDown,
-  ChevronUp,
+  UserMinus,
+  UserPlus,
+  Users,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface Team {
@@ -527,17 +523,6 @@ export default function TeamsPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => toggleTeamExpansion(team.id)}
-                  >
-                    {expandedTeams.has(team.id) ? (
-                      <ChevronUp className="h-4 w-4" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4" />
-                    )}
-                  </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm">
@@ -573,7 +558,6 @@ export default function TeamsPage() {
             </CardHeader>
 
             <CardContent className="pt-0">
-              {/* Preview members (always show first 3) */}
               <div className="space-y-3">
                 {team.members
                   ?.slice(0, expandedTeams.has(team.id) ? undefined : 3)
