@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -21,6 +21,7 @@ export type Ticket = {
   priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   assignedAgent: string;
   resolutionTime: string;
+  commentCount?: number;
 };
 
 export const columns: ColumnDef<Ticket>[] = [
@@ -122,8 +123,31 @@ export const columns: ColumnDef<Ticket>[] = [
   },
   {
     accessorKey: "resolutionTime",
-    header: "Resolution Time",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Response Time
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => <div>{row.getValue("resolutionTime")}</div>,
+  },
+  {
+    accessorKey: "commentCount",
+    header: "Comments",
+    cell: ({ row }) => {
+      const count = row.original.commentCount || 0;
+      return (
+        <div className="flex items-center gap-1">
+          <MessageSquare className="h-4 w-4" />
+          <span>{count}</span>
+        </div>
+      );
+    },
   },
   {
     id: "actions",
@@ -148,6 +172,7 @@ export const columns: ColumnDef<Ticket>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem>View details</DropdownMenuItem>
             <DropdownMenuItem>Edit ticket</DropdownMenuItem>
+            <DropdownMenuItem>Add comment</DropdownMenuItem>
             <DropdownMenuItem className="text-destructive">
               Delete ticket
             </DropdownMenuItem>

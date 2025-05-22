@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
         priority,
         status,
         organizationId,
+        responseTime: null,
       },
     });
 
@@ -58,46 +59,20 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Get tickets with their comments
+    // Get tickets with their comments count
     const tickets = await prisma.ticket.findMany({
       where: {
         organizationId,
       },
       include: {
-        comments: {
-          orderBy: {
-            createdAt: "asc",
-          },
+        _count: {
+          select: { comments: true },
         },
       },
     });
 
-    // Calculate response times for tickets that have comments
-    const ticketsWithResponseTime = tickets.map((ticket) => {
-      const firstComment = ticket.comments[0];
-      let responseTime = null;
-
-      if (firstComment) {
-        // Calculate response time in hours
-        const createdAt = new Date(ticket.createdAt);
-        const firstResponseAt = new Date(firstComment.createdAt);
-        const diffInMs = firstResponseAt.getTime() - createdAt.getTime();
-        const diffInHours = diffInMs / (1000 * 60 * 60);
-        responseTime = diffInHours;
-      }
-
-      // Return ticket with response time and without comments to reduce payload size
-      const { comments, ...ticketWithoutComments } = ticket;
-      return {
-        ...ticketWithoutComments,
-        responseTime,
-      };
-    });
-
-    // Calculate average response time
-    const ticketsWithResponses = ticketsWithResponseTime.filter(
-      (t) => t.responseTime !== null
-    );
+    // Calculate average response time from tickets with response time
+    const ticketsWithResponses = tickets.filter((t) => t.responseTime !== null);
     const totalResponseTime = ticketsWithResponses.reduce(
       (sum, ticket) => sum + (ticket.responseTime || 0),
       0
@@ -109,7 +84,14 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(
       {
-        tickets: ticketsWithResponseTime,
+        tickets: tickets.map((ticket) => {
+          // Extract _count and return clean ticket object
+          const { _count, ...ticketData } = ticket;
+          return {
+            ...ticketData,
+            commentCount: _count.comments,
+          };
+        }),
         stats: {
           averageResponseTime,
           totalTickets: tickets.length,

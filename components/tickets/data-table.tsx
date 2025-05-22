@@ -24,13 +24,16 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -68,20 +71,29 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  // Helper function to get cell content by column ID
+  const getCellContent = (row: any, columnId: string) => {
+    const cell = row
+      .getVisibleCells()
+      .find((cell: any) => cell.column.id === columnId);
+    if (!cell) return null;
+    return flexRender(cell.column.columnDef.cell, cell.getContext());
+  };
+
   return (
     <div className="w-full">
-      <div className="flex items-center py-4 gap-2">
+      <div className="flex flex-col sm:flex-row items-center py-4 gap-2">
         <Input
           placeholder="Filter by subject..."
           value={(table.getColumn("subject")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("subject")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm w-full"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="sm:ml-auto">
               Columns <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -106,7 +118,9 @@ export function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border">
+
+      {/* Desktop View - Table */}
+      <div className="hidden md:block rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -156,20 +170,79 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+
+      {/* Mobile View - Cards */}
+      <div className="md:hidden space-y-4">
+        {table.getRowModel().rows?.length ? (
+          table.getRowModel().rows.map((row) => (
+            <Card
+              key={row.id}
+              className={cn(row.getIsSelected() && "border-primary")}
+            >
+              <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {getCellContent(row, "select")}
+                  <CardTitle className="text-base">
+                    #{(row.original as any).id}
+                  </CardTitle>
+                </div>
+                {getCellContent(row, "actions")}
+              </CardHeader>
+              <CardContent className="p-4 pt-2 space-y-2">
+                <div className="font-medium">
+                  {(row.original as any).subject}
+                </div>
+                <div className="flex flex-wrap gap-2 text-sm">
+                  <div className="flex items-center gap-1">
+                    <span className="text-muted-foreground">Status:</span>
+                    {getCellContent(row, "status")}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-muted-foreground">Priority:</span>
+                    {getCellContent(row, "priority")}
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-4 text-sm pt-2">
+                  <div>
+                    <span className="text-muted-foreground">Agent:</span>{" "}
+                    {(row.original as any).assignedAgent}
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Response:</span>{" "}
+                    {(row.original as any).resolutionTime}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="text-muted-foreground">Comments:</span>
+                    {getCellContent(row, "commentCount")}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <div className="text-center p-4 border rounded-md">No results.</div>
+        )}
+      </div>
+
+      <div className="flex flex-col sm:flex-row items-center justify-end gap-2 py-4">
+        <div className="text-sm text-muted-foreground order-2 sm:order-1 sm:flex-1">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
-        <div className="space-x-2">
+        <div className="flex items-center space-x-2 order-1 sm:order-2">
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
+            <ChevronLeft className="h-4 w-4 mr-1" />
             Previous
           </Button>
+          <div className="text-sm font-medium">
+            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </div>
           <Button
             variant="outline"
             size="sm"
@@ -177,6 +250,7 @@ export function DataTable<TData, TValue>({
             disabled={!table.getCanNextPage()}
           >
             Next
+            <ChevronRight className="h-4 w-4 ml-1" />
           </Button>
         </div>
       </div>

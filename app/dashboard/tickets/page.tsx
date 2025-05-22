@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/tickets/data-table";
 import { columns, Ticket as UITicket } from "@/components/tickets/columns";
 import { TicketFilters } from "@/components/tickets/ticket-filters";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Clock } from "lucide-react";
 import { useTickets, Ticket as ApiTicket } from "@/lib/hooks/use-tickets";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function TicketsPage() {
-  const { tickets, isLoading, error, getTickets } = useTickets();
+  const { tickets, stats, isLoading, error, getTickets } = useTickets();
   const [filteredData, setFilteredData] = useState<UITicket[]>([]);
 
   // Map API tickets to UI tickets format
@@ -21,8 +22,28 @@ export default function TicketsPage() {
       status: ticket.status,
       priority: ticket.priority,
       assignedAgent: "Unassigned", // This field doesn't exist in API ticket
-      resolutionTime: ticket.responseTime ? `${ticket.responseTime} ms` : "N/A",
+      resolutionTime: ticket.responseTime
+        ? `${formatResponseTime(ticket.responseTime)}`
+        : "N/A",
+      commentCount: (ticket as any).commentCount || 0, // Add commentCount
     }));
+  };
+
+  // Format response time from hours to a readable format
+  const formatResponseTime = (hours: number): string => {
+    if (hours < 1) {
+      return `${Math.round(hours * 60)} min`;
+    } else if (hours < 24) {
+      return `${Math.round(hours * 10) / 10} hrs`;
+    } else {
+      return `${Math.round((hours / 24) * 10) / 10} days`;
+    }
+  };
+
+  // Format average response time for display
+  const formatAverageResponseTime = (hours: number | null): string => {
+    if (hours === null) return "N/A";
+    return formatResponseTime(hours);
   };
 
   useEffect(() => {

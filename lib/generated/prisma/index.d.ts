@@ -9640,8 +9640,18 @@ export namespace Prisma {
 
   export type AggregateTicket = {
     _count: TicketCountAggregateOutputType | null
+    _avg: TicketAvgAggregateOutputType | null
+    _sum: TicketSumAggregateOutputType | null
     _min: TicketMinAggregateOutputType | null
     _max: TicketMaxAggregateOutputType | null
+  }
+
+  export type TicketAvgAggregateOutputType = {
+    responseTime: number | null
+  }
+
+  export type TicketSumAggregateOutputType = {
+    responseTime: number | null
   }
 
   export type TicketMinAggregateOutputType = {
@@ -9652,6 +9662,7 @@ export namespace Prisma {
     priority: $Enums.TicketPriority | null
     createdAt: Date | null
     updatedAt: Date | null
+    responseTime: number | null
     organizationId: string | null
   }
 
@@ -9663,6 +9674,7 @@ export namespace Prisma {
     priority: $Enums.TicketPriority | null
     createdAt: Date | null
     updatedAt: Date | null
+    responseTime: number | null
     organizationId: string | null
   }
 
@@ -9674,10 +9686,19 @@ export namespace Prisma {
     priority: number
     createdAt: number
     updatedAt: number
+    responseTime: number
     organizationId: number
     _all: number
   }
 
+
+  export type TicketAvgAggregateInputType = {
+    responseTime?: true
+  }
+
+  export type TicketSumAggregateInputType = {
+    responseTime?: true
+  }
 
   export type TicketMinAggregateInputType = {
     id?: true
@@ -9687,6 +9708,7 @@ export namespace Prisma {
     priority?: true
     createdAt?: true
     updatedAt?: true
+    responseTime?: true
     organizationId?: true
   }
 
@@ -9698,6 +9720,7 @@ export namespace Prisma {
     priority?: true
     createdAt?: true
     updatedAt?: true
+    responseTime?: true
     organizationId?: true
   }
 
@@ -9709,6 +9732,7 @@ export namespace Prisma {
     priority?: true
     createdAt?: true
     updatedAt?: true
+    responseTime?: true
     organizationId?: true
     _all?: true
   }
@@ -9751,6 +9775,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: TicketAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TicketSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: TicketMinAggregateInputType
@@ -9781,6 +9817,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: TicketCountAggregateInputType | true
+    _avg?: TicketAvgAggregateInputType
+    _sum?: TicketSumAggregateInputType
     _min?: TicketMinAggregateInputType
     _max?: TicketMaxAggregateInputType
   }
@@ -9793,8 +9831,11 @@ export namespace Prisma {
     priority: $Enums.TicketPriority
     createdAt: Date
     updatedAt: Date
+    responseTime: number | null
     organizationId: string
     _count: TicketCountAggregateOutputType | null
+    _avg: TicketAvgAggregateOutputType | null
+    _sum: TicketSumAggregateOutputType | null
     _min: TicketMinAggregateOutputType | null
     _max: TicketMaxAggregateOutputType | null
   }
@@ -9821,6 +9862,7 @@ export namespace Prisma {
     priority?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    responseTime?: boolean
     organizationId?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     comments?: boolean | Ticket$commentsArgs<ExtArgs>
@@ -9835,6 +9877,7 @@ export namespace Prisma {
     priority?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    responseTime?: boolean
     organizationId?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["ticket"]>
@@ -9847,6 +9890,7 @@ export namespace Prisma {
     priority?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    responseTime?: boolean
     organizationId?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["ticket"]>
@@ -9859,10 +9903,11 @@ export namespace Prisma {
     priority?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    responseTime?: boolean
     organizationId?: boolean
   }
 
-  export type TicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "status" | "priority" | "createdAt" | "updatedAt" | "organizationId", ExtArgs["result"]["ticket"]>
+  export type TicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "status" | "priority" | "createdAt" | "updatedAt" | "responseTime" | "organizationId", ExtArgs["result"]["ticket"]>
   export type TicketInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     comments?: boolean | Ticket$commentsArgs<ExtArgs>
@@ -9889,6 +9934,7 @@ export namespace Prisma {
       priority: $Enums.TicketPriority
       createdAt: Date
       updatedAt: Date
+      responseTime: number | null
       organizationId: string
     }, ExtArgs["result"]["ticket"]>
     composites: {}
@@ -10322,6 +10368,7 @@ export namespace Prisma {
     readonly priority: FieldRef<"Ticket", 'TicketPriority'>
     readonly createdAt: FieldRef<"Ticket", 'DateTime'>
     readonly updatedAt: FieldRef<"Ticket", 'DateTime'>
+    readonly responseTime: FieldRef<"Ticket", 'Float'>
     readonly organizationId: FieldRef<"Ticket", 'String'>
   }
     
@@ -11958,6 +12005,7 @@ export namespace Prisma {
     priority: 'priority',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    responseTime: 'responseTime',
     organizationId: 'organizationId'
   };
 
@@ -12096,6 +12144,20 @@ export namespace Prisma {
    * Reference to a field of type 'TicketPriority[]'
    */
   export type ListEnumTicketPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketPriority[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -12638,6 +12700,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFilter<"Ticket"> | $Enums.TicketPriority
     createdAt?: DateTimeFilter<"Ticket"> | Date | string
     updatedAt?: DateTimeFilter<"Ticket"> | Date | string
+    responseTime?: FloatNullableFilter<"Ticket"> | number | null
     organizationId?: StringFilter<"Ticket"> | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     comments?: TicketCommentListRelationFilter
@@ -12651,6 +12714,7 @@ export namespace Prisma {
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    responseTime?: SortOrderInput | SortOrder
     organizationId?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
     comments?: TicketCommentOrderByRelationAggregateInput
@@ -12667,6 +12731,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFilter<"Ticket"> | $Enums.TicketPriority
     createdAt?: DateTimeFilter<"Ticket"> | Date | string
     updatedAt?: DateTimeFilter<"Ticket"> | Date | string
+    responseTime?: FloatNullableFilter<"Ticket"> | number | null
     organizationId?: StringFilter<"Ticket"> | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     comments?: TicketCommentListRelationFilter
@@ -12680,10 +12745,13 @@ export namespace Prisma {
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    responseTime?: SortOrderInput | SortOrder
     organizationId?: SortOrder
     _count?: TicketCountOrderByAggregateInput
+    _avg?: TicketAvgOrderByAggregateInput
     _max?: TicketMaxOrderByAggregateInput
     _min?: TicketMinOrderByAggregateInput
+    _sum?: TicketSumOrderByAggregateInput
   }
 
   export type TicketScalarWhereWithAggregatesInput = {
@@ -12697,6 +12765,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityWithAggregatesFilter<"Ticket"> | $Enums.TicketPriority
     createdAt?: DateTimeWithAggregatesFilter<"Ticket"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Ticket"> | Date | string
+    responseTime?: FloatNullableWithAggregatesFilter<"Ticket"> | number | null
     organizationId?: StringWithAggregatesFilter<"Ticket"> | string
   }
 
@@ -13325,6 +13394,7 @@ export namespace Prisma {
     priority: $Enums.TicketPriority
     createdAt?: Date | string
     updatedAt?: Date | string
+    responseTime?: number | null
     organization: OrganizationCreateNestedOneWithoutTicketsInput
     comments?: TicketCommentCreateNestedManyWithoutTicketInput
   }
@@ -13337,6 +13407,7 @@ export namespace Prisma {
     priority: $Enums.TicketPriority
     createdAt?: Date | string
     updatedAt?: Date | string
+    responseTime?: number | null
     organizationId: string
     comments?: TicketCommentUncheckedCreateNestedManyWithoutTicketInput
   }
@@ -13349,6 +13420,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     organization?: OrganizationUpdateOneRequiredWithoutTicketsNestedInput
     comments?: TicketCommentUpdateManyWithoutTicketNestedInput
   }
@@ -13361,6 +13433,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     organizationId?: StringFieldUpdateOperationsInput | string
     comments?: TicketCommentUncheckedUpdateManyWithoutTicketNestedInput
   }
@@ -13373,6 +13446,7 @@ export namespace Prisma {
     priority: $Enums.TicketPriority
     createdAt?: Date | string
     updatedAt?: Date | string
+    responseTime?: number | null
     organizationId: string
   }
 
@@ -13384,6 +13458,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type TicketUncheckedUpdateManyInput = {
@@ -13394,6 +13469,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     organizationId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -13973,6 +14049,17 @@ export namespace Prisma {
     not?: NestedEnumTicketPriorityFilter<$PrismaModel> | $Enums.TicketPriority
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type TicketCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -13981,7 +14068,12 @@ export namespace Prisma {
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    responseTime?: SortOrder
     organizationId?: SortOrder
+  }
+
+  export type TicketAvgOrderByAggregateInput = {
+    responseTime?: SortOrder
   }
 
   export type TicketMaxOrderByAggregateInput = {
@@ -13992,6 +14084,7 @@ export namespace Prisma {
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    responseTime?: SortOrder
     organizationId?: SortOrder
   }
 
@@ -14003,7 +14096,12 @@ export namespace Prisma {
     priority?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    responseTime?: SortOrder
     organizationId?: SortOrder
+  }
+
+  export type TicketSumOrderByAggregateInput = {
+    responseTime?: SortOrder
   }
 
   export type EnumTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -14024,6 +14122,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTicketPriorityFilter<$PrismaModel>
     _max?: NestedEnumTicketPriorityFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type TicketScalarRelationFilter = {
@@ -14584,6 +14698,14 @@ export namespace Prisma {
     set?: $Enums.TicketPriority
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type OrganizationUpdateOneRequiredWithoutTicketsNestedInput = {
     create?: XOR<OrganizationCreateWithoutTicketsInput, OrganizationUncheckedCreateWithoutTicketsInput>
     connectOrCreate?: OrganizationCreateOrConnectWithoutTicketsInput
@@ -14832,6 +14954,17 @@ export namespace Prisma {
     not?: NestedEnumTicketPriorityFilter<$PrismaModel> | $Enums.TicketPriority
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumTicketStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.TicketStatus | EnumTicketStatusFieldRefInput<$PrismaModel>
     in?: $Enums.TicketStatus[] | ListEnumTicketStatusFieldRefInput<$PrismaModel>
@@ -14850,6 +14983,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumTicketPriorityFilter<$PrismaModel>
     _max?: NestedEnumTicketPriorityFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type SessionCreateWithoutUserInput = {
@@ -15457,6 +15606,7 @@ export namespace Prisma {
     priority: $Enums.TicketPriority
     createdAt?: Date | string
     updatedAt?: Date | string
+    responseTime?: number | null
     comments?: TicketCommentCreateNestedManyWithoutTicketInput
   }
 
@@ -15468,6 +15618,7 @@ export namespace Prisma {
     priority: $Enums.TicketPriority
     createdAt?: Date | string
     updatedAt?: Date | string
+    responseTime?: number | null
     comments?: TicketCommentUncheckedCreateNestedManyWithoutTicketInput
   }
 
@@ -15556,6 +15707,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFilter<"Ticket"> | $Enums.TicketPriority
     createdAt?: DateTimeFilter<"Ticket"> | Date | string
     updatedAt?: DateTimeFilter<"Ticket"> | Date | string
+    responseTime?: FloatNullableFilter<"Ticket"> | number | null
     organizationId?: StringFilter<"Ticket"> | string
   }
 
@@ -15945,6 +16097,7 @@ export namespace Prisma {
     priority: $Enums.TicketPriority
     createdAt?: Date | string
     updatedAt?: Date | string
+    responseTime?: number | null
     organization: OrganizationCreateNestedOneWithoutTicketsInput
   }
 
@@ -15956,6 +16109,7 @@ export namespace Prisma {
     priority: $Enums.TicketPriority
     createdAt?: Date | string
     updatedAt?: Date | string
+    responseTime?: number | null
     organizationId: string
   }
 
@@ -16016,6 +16170,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     organization?: OrganizationUpdateOneRequiredWithoutTicketsNestedInput
   }
 
@@ -16027,6 +16182,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     organizationId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -16309,6 +16465,7 @@ export namespace Prisma {
     priority: $Enums.TicketPriority
     createdAt?: Date | string
     updatedAt?: Date | string
+    responseTime?: number | null
   }
 
   export type MemberUpdateWithoutOrganizationInput = {
@@ -16403,6 +16560,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     comments?: TicketCommentUpdateManyWithoutTicketNestedInput
   }
 
@@ -16414,6 +16572,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     comments?: TicketCommentUncheckedUpdateManyWithoutTicketNestedInput
   }
 
@@ -16425,6 +16584,7 @@ export namespace Prisma {
     priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type TicketCommentCreateManyTicketInput = {
