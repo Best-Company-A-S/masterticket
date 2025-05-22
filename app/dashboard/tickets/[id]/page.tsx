@@ -6,12 +6,23 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Clock, MessageSquare, Pencil } from "lucide-react";
+import {
+  ArrowLeft,
+  Clock,
+  MessageSquare,
+  Pencil,
+  Sparkles,
+  ChevronDown,
+  ChevronRight,
+} from "lucide-react";
 import { useTickets, Ticket } from "@/lib/hooks/use-tickets";
 import { formatDistanceToNow } from "date-fns";
 import CommentSection from "@/components/tickets/comment-section";
 import EditTicketModal from "@/components/tickets/edit-ticket-modal";
 import DeleteTicketDialog from "@/components/tickets/delete-ticket-dialog";
+import ShinyText from "@/components/ui/shine-text";
+import LoadingDots from "@/components/ui/loading-dots";
+import MarkdownRenderer from "@/components/ui/markdown-renderer";
 
 export default function TicketDetailsPage() {
   const params = useParams();
@@ -20,6 +31,9 @@ export default function TicketDetailsPage() {
   const { getTicket, isLoading, error } = useTickets();
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [commentCount, setCommentCount] = useState(0);
+  const [summary, setSummary] = useState<string | null>(null);
+  const [isSummarizing, setIsSummarizing] = useState(false);
+  const [isOriginalExpanded, setIsOriginalExpanded] = useState(false);
   const editModalRef = useRef<{ setOpen: (open: boolean) => void } | null>(
     null
   );
@@ -103,6 +117,41 @@ export default function TicketDetailsPage() {
     }
   };
 
+  // Summarize ticket description using API endpoint
+  const summarizeTicket = async () => {
+    if (!ticket || !ticket.description || ticket.description.length < 100)
+      return;
+
+    setIsSummarizing(true);
+    try {
+      const response = await fetch("/api/tickets/summarize", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ description: ticket.description }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to generate summary");
+      }
+
+      const data = await response.json();
+      setSummary(data.summary);
+    } catch (error) {
+      console.error("Error summarizing ticket:", error);
+      setSummary("Failed to generate summary. Please try again later.");
+    } finally {
+      setIsSummarizing(false);
+    }
+  };
+
+  // Toggle original content visibility
+  const toggleOriginalContent = () => {
+    setIsOriginalExpanded(!isOriginalExpanded);
+  };
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
@@ -166,10 +215,79 @@ export default function TicketDetailsPage() {
                 <Separator />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <div className="text-sm font-medium">Description</div>
-                    <p className="mt-1 whitespace-pre-wrap">
-                      {ticket.description}
-                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm font-medium">Description</div>
+                      {ticket.description &&
+                        ticket.description.length > 100 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="flex items-center gap-1 text-primary hover:text-primary/80"
+                            onClick={summarizeTicket}
+                            disabled={isSummarizing}
+                          >
+                            <Sparkles className="h-3 w-3" />
+                            {isSummarizing ? (
+                              <div className="flex items-center">
+                                <ShinyText
+                                  text="Summarizing"
+                                  speed={3}
+                                  pulse={true}
+                                />
+                                <LoadingDots color="var(--primary)" />
+                              </div>
+                            ) : (
+                              "AI Summary"
+                            )}
+                          </Button>
+                        )}
+                    </div>
+                    {summary ? (
+                      <div className="mt-2">
+                        <div className="bg-muted/50 p-3 rounded-md mb-2 animate-fade-in">
+                          <div className="flex items-center mb-1">
+                            <Sparkles className="h-3 w-3 mr-1 text-primary animate-pulse" />
+                            <span className="text-xs font-medium text-primary">
+                              AI SUMMARY
+                            </span>
+                          </div>
+                          <MarkdownRenderer
+                            content={summary}
+                            className="text-sm"
+                          />
+                        </div>
+
+                        <div className="mt-3">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground w-full justify-between p-2 h-auto"
+                            onClick={toggleOriginalContent}
+                          >
+                            <span className="font-medium">
+                              Original Content
+                            </span>
+                            {isOriginalExpanded ? (
+                              <ChevronDown className="h-3 w-3" />
+                            ) : (
+                              <ChevronRight className="h-3 w-3" />
+                            )}
+                          </Button>
+
+                          {isOriginalExpanded && (
+                            <div className="animate-fade-in mt-2 border border-border/50 rounded-md p-3">
+                              <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+                                {ticket.description}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="mt-1 whitespace-pre-wrap">
+                        {ticket.description}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
