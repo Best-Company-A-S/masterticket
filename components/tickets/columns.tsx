@@ -1,7 +1,12 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, MessageSquare } from "lucide-react";
+import {
+  ArrowUpDown,
+  MoreHorizontal,
+  MessageSquare,
+  Pencil,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -181,7 +186,14 @@ export const columns: ColumnDef<Ticket>[] = [
             <DropdownMenuItem asChild>
               <Link href={`/dashboard/tickets/${ticket.id}`}>View details</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Edit ticket</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`/dashboard/tickets/${ticket.id}?edit=true`}>
+                <div className="flex items-center">
+                  <Pencil className="mr-2 h-4 w-4" />
+                  Edit ticket
+                </div>
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Add comment</DropdownMenuItem>
             <DropdownMenuItem className="text-destructive">
               Delete ticket

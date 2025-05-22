@@ -1,40 +1,60 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Clock, MessageSquare } from "lucide-react";
+import { ArrowLeft, Clock, MessageSquare, Pencil } from "lucide-react";
 import { useTickets, Ticket } from "@/lib/hooks/use-tickets";
 import { formatDistanceToNow } from "date-fns";
 import CommentSection from "@/components/tickets/comment-section";
+import EditTicketModal from "@/components/tickets/edit-ticket-modal";
 
 export default function TicketDetailsPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { getTicket, isLoading, error } = useTickets();
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [commentCount, setCommentCount] = useState(0);
+  const editModalRef = useRef<{ setOpen: (open: boolean) => void } | null>(
+    null
+  );
+
+  const fetchTicket = async () => {
+    if (params.id) {
+      const result = await getTicket(params.id as string);
+      if (result) {
+        setTicket(result);
+        setCommentCount((result as any).commentCount || 0);
+      }
+    }
+  };
 
   useEffect(() => {
-    const fetchTicket = async () => {
-      if (params.id) {
-        const result = await getTicket(params.id as string);
-        if (result) {
-          setTicket(result);
-          setCommentCount((result as any).commentCount || 0);
-        }
-      }
-    };
-
     fetchTicket();
   }, [params.id, getTicket]);
+
+  // Check for edit query param and open modal if present
+  useEffect(() => {
+    const shouldOpenEditModal = searchParams.get("edit") === "true";
+    if (shouldOpenEditModal && editModalRef.current && ticket) {
+      editModalRef.current.setOpen(true);
+      // Remove the edit param from the URL to avoid reopening on refresh
+      router.replace(`/dashboard/tickets/${params.id}`);
+    }
+  }, [searchParams, ticket, router, params.id]);
 
   // Handle comment count updates
   const handleCommentCountChange = (count: number) => {
     setCommentCount(count);
+  };
+
+  // Handle ticket update
+  const handleTicketUpdated = () => {
+    fetchTicket();
   };
 
   // Format response time from hours to a readable format
@@ -84,17 +104,26 @@ export default function TicketDetailsPage() {
 
   return (
     <div className="p-6">
-      <div className="flex items-center mb-6">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="mr-4"
-          onClick={() => router.back()}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to tickets
-        </Button>
-        <h1 className="text-2xl font-bold">Ticket Details</h1>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mr-4"
+            onClick={() => router.back()}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to tickets
+          </Button>
+          <h1 className="text-2xl font-bold">Ticket Details</h1>
+        </div>
+        {ticket && (
+          <EditTicketModal
+            ref={editModalRef}
+            ticket={ticket}
+            onTicketUpdated={handleTicketUpdated}
+          />
+        )}
       </div>
 
       {isLoading ? (
