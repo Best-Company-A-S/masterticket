@@ -27,6 +27,7 @@ model User {
   accounts      Account[]
   members       Member[]
   invitations   Invitation[] @relation("inviter")
+  comments TicketComment[]
 }
 
 model Session {
@@ -86,6 +87,7 @@ model Organization {
   members     Member[]
   invitations Invitation[]
   sessions    Session[]
+  tickets     Ticket[]
 }
 
 model Member {
@@ -115,4 +117,43 @@ model Invitation {
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   
   @@unique([email, organizationId])
+}
+
+enum TicketStatus {
+  OPEN
+  CLOSED
+  IN_PROGRESS
+  ON_HOLD
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+
+model Ticket {
+  id String @id @default(cuid())
+  title String
+  description String
+  status TicketStatus
+  priority TicketPriority
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  organizationId String
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  comments TicketComment[]
+}
+
+model TicketComment {
+  id String @id @default(cuid())
+  content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ticketId String
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorId String
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
