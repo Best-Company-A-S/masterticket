@@ -175,17 +175,20 @@ export function AppSidebar() {
           <SidebarGroupLabel>Settings</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton isActive={isActive("/dashboard/settings")}>
-                  <Link
-                    href="/dashboard/settings"
+              <Link
+                href="/dashboard/settings"
+                className="w-full cursor-pointer"
+              >
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    isActive={isActive("/dashboard/settings")}
                     className="flex items-center gap-2"
                   >
                     <Settings className="h-4 w-4" />
                     <span>Settings</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </Link>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
