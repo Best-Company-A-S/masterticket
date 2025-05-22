@@ -42,6 +42,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -54,6 +55,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 import {
   Users,
   Plus,
@@ -65,6 +68,10 @@ import {
   Crown,
   ShieldCheck,
   User,
+  UserMinus,
+  UserCheck,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -104,20 +111,33 @@ interface Invitation {
 }
 
 export default function TeamsPage() {
-  const { activeOrganization, isAdmin, isOwner, isLoading } = useOrganization({
-    requireOrganization: true,
-  });
+  const { activeOrganization, isAdmin, isOwner, isLoading, session } =
+    useOrganization({
+      requireOrganization: true,
+    });
 
   const { refreshTeams: refreshTeamContext } = useTeamContext();
   const [teams, setTeams] = useState<Team[]>([]);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [loadingTeams, setLoadingTeams] = useState(true);
   const [loadingInvitations, setLoadingInvitations] = useState(true);
+  const [expandedTeams, setExpandedTeams] = useState<Set<string>>(new Set());
 
   // Modal states
   const [showCreateTeam, setShowCreateTeam] = useState(false);
   const [showInviteMember, setShowInviteMember] = useState(false);
   const [showDeleteTeam, setShowDeleteTeam] = useState<string | null>(null);
+  const [showRemoveMember, setShowRemoveMember] = useState<{
+    memberId: string;
+    memberName: string;
+    teamName: string;
+  } | null>(null);
+  const [showChangeRole, setShowChangeRole] = useState<{
+    memberId: string;
+    memberName: string;
+    currentRole: string;
+    teamId: string;
+  } | null>(null);
   const [selectedTeamForInvite, setSelectedTeamForInvite] = useState<
     string | null
   >(null);
@@ -125,9 +145,23 @@ export default function TeamsPage() {
   // Form states
   const [newTeamName, setNewTeamName] = useState("");
   const [inviteRole, setInviteRole] = useState("member");
+  const [newRole, setNewRole] = useState("");
   const [generatedCode, setGeneratedCode] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [removing, setRemoving] = useState(false);
+  const [updatingRole, setUpdatingRole] = useState(false);
+
+  // Toggle team expansion
+  const toggleTeamExpansion = (teamId: string) => {
+    const newExpanded = new Set(expandedTeams);
+    if (newExpanded.has(teamId)) {
+      newExpanded.delete(teamId);
+    } else {
+      newExpanded.add(teamId);
+    }
+    setExpandedTeams(newExpanded);
+  };
 
   // Fetch teams
   const fetchTeams = async () => {
@@ -297,6 +331,83 @@ export default function TeamsPage() {
     }
   };
 
+  // Remove member from team
+  const handleRemoveMember = async () => {
+    if (!showRemoveMember || !activeOrganization?.id) return;
+
+    setRemoving(true);
+    try {
+      const response = await fetch(
+        `/api/organization/remove-team-member?memberId=${
+          showRemoveMember.memberId
+        }&teamId=${
+          teams.find((t) =>
+            t.members.some((m) => m.id === showRemoveMember.memberId)
+          )?.id
+        }&organizationId=${activeOrganization.id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(data.message);
+        setShowRemoveMember(null);
+        fetchTeams();
+        refreshTeamContext();
+      } else {
+        toast.error(data.error || "Failed to remove member");
+      }
+    } catch (error) {
+      console.error("Error removing member:", error);
+      toast.error("Failed to remove member");
+    } finally {
+      setRemoving(false);
+    }
+  };
+
+  // Update member role
+  const handleUpdateRole = async () => {
+    if (!showChangeRole || !activeOrganization?.id || !newRole) return;
+
+    setUpdatingRole(true);
+    try {
+      const response = await fetch("/api/organization/update-member-role", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          memberId: showChangeRole.memberId,
+          newRole,
+          teamId: showChangeRole.teamId,
+          organizationId: activeOrganization.id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(data.message);
+        setShowChangeRole(null);
+        setNewRole("");
+        fetchTeams();
+        refreshTeamContext();
+      } else {
+        toast.error(data.error || "Failed to update role");
+      }
+    } catch (error) {
+      console.error("Error updating role:", error);
+      toast.error("Failed to update role");
+    } finally {
+      setUpdatingRole(false);
+    }
+  };
+
   // Copy code to clipboard
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -325,6 +436,29 @@ export default function TeamsPage() {
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300";
     }
+  };
+
+  // Check if current user can manage a specific member
+  const canManageMember = (member: any, teamId: string) => {
+    if (!session?.user || member.user.id === session.user.id) return false; // Can't manage yourself
+
+    // Find current user's role in this team or organization
+    const team = teams.find((t) => t.id === teamId);
+    const currentUserInTeam = team?.members.find(
+      (m) => m.user.id === session.user.id
+    );
+
+    // If current user is not in the team, check org-level permissions
+    if (!currentUserInTeam) {
+      return isOwner() || isAdmin();
+    }
+
+    // Team-level permissions
+    if (currentUserInTeam.role === "owner") return true;
+    if (currentUserInTeam.role === "admin" && member.role === "member")
+      return true;
+
+    return false;
   };
 
   if (isLoading || loadingTeams) {
@@ -375,76 +509,158 @@ export default function TeamsPage() {
       </div>
 
       {/* Teams Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6">
         {teams.map((team) => (
-          <Card key={team.id}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div className="flex items-center space-x-2">
-                <Users className="h-5 w-5" />
-                <CardTitle className="text-lg">{team.name}</CardTitle>
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setSelectedTeamForInvite(team.id);
-                      setShowInviteMember(true);
-                    }}
-                  >
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Invite to Team
-                  </DropdownMenuItem>
-                  {isOwner() && (
-                    <DropdownMenuItem
-                      onClick={() => setShowDeleteTeam(team.id)}
-                      className="text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Delete Team
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="mb-4">
-                {team.members?.length || 0} member
-                {(team.members?.length || 0) !== 1 ? "s" : ""}
-              </CardDescription>
-              <div className="space-y-2">
-                {team.members?.slice(0, 3).map((member) => (
-                  <div
-                    key={member.id}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-xs">
-                        {member.user.name?.charAt(0) || "?"}
-                      </div>
-                      <span className="text-sm truncate">
-                        {member.user.name}
-                      </span>
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className={`text-xs ${getRoleColor(member.role)}`}
-                    >
-                      <span className="mr-1">{getRoleIcon(member.role)}</span>
-                      {member.role}
-                    </Badge>
+          <Card key={team.id} className="overflow-hidden">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Users className="h-5 w-5 text-primary" />
                   </div>
-                )) || []}
-                {(team.members?.length || 0) > 3 && (
-                  <p className="text-xs text-muted-foreground">
-                    +{(team.members?.length || 0) - 3} more member
-                    {(team.members?.length || 0) - 3 !== 1 ? "s" : ""}
-                  </p>
-                )}
+                  <div>
+                    <CardTitle className="text-xl">{team.name}</CardTitle>
+                    <CardDescription>
+                      {team.members?.length || 0} member
+                      {(team.members?.length || 0) !== 1 ? "s" : ""}
+                    </CardDescription>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => toggleTeamExpansion(team.id)}
+                  >
+                    {expandedTeams.has(team.id) ? (
+                      <ChevronUp className="h-4 w-4" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4" />
+                    )}
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setSelectedTeamForInvite(team.id);
+                          setShowInviteMember(true);
+                        }}
+                      >
+                        <UserPlus className="h-4 w-4 mr-2" />
+                        Invite to Team
+                      </DropdownMenuItem>
+                      {isOwner() && (
+                        <>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() => setShowDeleteTeam(team.id)}
+                            className="text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete Team
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="pt-0">
+              {/* Preview members (always show first 3) */}
+              <div className="space-y-3">
+                {team.members
+                  ?.slice(0, expandedTeams.has(team.id) ? undefined : 3)
+                  .map((member) => (
+                    <div
+                      key={member.id}
+                      className="flex items-center justify-between p-3 rounded-lg border bg-card/50"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={member.user.image} />
+                          <AvatarFallback>
+                            {member.user.name?.charAt(0) || "?"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium">{member.user.name}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {member.user.email}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant="secondary"
+                          className={`${getRoleColor(member.role)}`}
+                        >
+                          {getRoleIcon(member.role)}
+                          <span className="ml-1 capitalize">{member.role}</span>
+                        </Badge>
+                        {canManageMember(member, team.id) && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setShowChangeRole({
+                                    memberId: member.id,
+                                    memberName: member.user.name || "",
+                                    currentRole: member.role,
+                                    teamId: team.id,
+                                  });
+                                  setNewRole(member.role);
+                                }}
+                              >
+                                <UserCheck className="h-4 w-4 mr-2" />
+                                Change Role
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  setShowRemoveMember({
+                                    memberId: member.id,
+                                    memberName: member.user.name || "",
+                                    teamName: team.name,
+                                  })
+                                }
+                                className="text-destructive"
+                              >
+                                <UserMinus className="h-4 w-4 mr-2" />
+                                Remove from Team
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
+                    </div>
+                  )) || []}
+
+                {!expandedTeams.has(team.id) &&
+                  (team.members?.length || 0) > 3 && (
+                    <div className="text-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => toggleTeamExpansion(team.id)}
+                        className="text-muted-foreground"
+                      >
+                        +{(team.members?.length || 0) - 3} more member
+                        {(team.members?.length || 0) - 3 !== 1 ? "s" : ""}
+                      </Button>
+                    </div>
+                  )}
               </div>
             </CardContent>
           </Card>
@@ -646,6 +862,103 @@ export default function TeamsPage() {
             ) : (
               <Button onClick={() => setShowInviteMember(false)}>Done</Button>
             )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Remove Member Dialog */}
+      <AlertDialog
+        open={!!showRemoveMember}
+        onOpenChange={() => setShowRemoveMember(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Team Member</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to remove{" "}
+              <span className="font-semibold">
+                {showRemoveMember?.memberName}
+              </span>{" "}
+              from the{" "}
+              <span className="font-semibold">
+                {showRemoveMember?.teamName}
+              </span>{" "}
+              team? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleRemoveMember}
+              disabled={removing}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {removing ? "Removing..." : "Remove Member"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Change Role Dialog */}
+      <Dialog
+        open={!!showChangeRole}
+        onOpenChange={(open) => {
+          if (!open) {
+            setShowChangeRole(null);
+            setNewRole("");
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Change Member Role</DialogTitle>
+            <DialogDescription>
+              Update the role for{" "}
+              <span className="font-semibold">
+                {showChangeRole?.memberName}
+              </span>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label>Current Role</Label>
+              <Badge
+                variant="secondary"
+                className={`w-fit ${getRoleColor(
+                  showChangeRole?.currentRole || ""
+                )}`}
+              >
+                {getRoleIcon(showChangeRole?.currentRole || "")}
+                <span className="ml-1 capitalize">
+                  {showChangeRole?.currentRole}
+                </span>
+              </Badge>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="newRole">New Role</Label>
+              <Select value={newRole} onValueChange={setNewRole}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select new role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="member">Member</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  {isOwner() && <SelectItem value="owner">Owner</SelectItem>}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              onClick={handleUpdateRole}
+              disabled={
+                updatingRole ||
+                !newRole ||
+                newRole === showChangeRole?.currentRole
+              }
+            >
+              {updatingRole ? "Updating..." : "Update Role"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
