@@ -1,0 +1,159 @@
+"use client";
+
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Checkbox } from "@/components/ui/checkbox";
+
+export type Ticket = {
+  id: string;
+  subject: string;
+  status: "OPEN" | "CLOSED" | "IN_PROGRESS" | "ON_HOLD";
+  priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  assignedAgent: string;
+  resolutionTime: string;
+};
+
+export const columns: ColumnDef<Ticket>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "id",
+    header: "Ticket ID",
+    cell: ({ row }) => <div className="font-medium">#{row.getValue("id")}</div>,
+  },
+  {
+    accessorKey: "subject",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Subject
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div>{row.getValue("subject")}</div>,
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+
+      return (
+        <Badge
+          variant={
+            status === "OPEN"
+              ? "default"
+              : status === "IN_PROGRESS"
+              ? "secondary"
+              : status === "CLOSED"
+              ? "outline"
+              : "destructive"
+          }
+        >
+          {status.replace("_", " ")}
+        </Badge>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "priority",
+    header: "Priority",
+    cell: ({ row }) => {
+      const priority = row.getValue("priority") as string;
+
+      return (
+        <Badge
+          variant={
+            priority === "LOW"
+              ? "outline"
+              : priority === "MEDIUM"
+              ? "secondary"
+              : priority === "HIGH"
+              ? "default"
+              : "destructive"
+          }
+        >
+          {priority}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "assignedAgent",
+    header: "Assigned Agent",
+    cell: ({ row }) => <div>{row.getValue("assignedAgent")}</div>,
+  },
+  {
+    accessorKey: "resolutionTime",
+    header: "Resolution Time",
+    cell: ({ row }) => <div>{row.getValue("resolutionTime")}</div>,
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const ticket = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(ticket.id)}
+            >
+              Copy ticket ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>View details</DropdownMenuItem>
+            <DropdownMenuItem>Edit ticket</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive">
+              Delete ticket
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
