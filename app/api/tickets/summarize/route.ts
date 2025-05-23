@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       contents: description,
       config: {
         systemInstruction:
-          "Please provide a concise summary of the following ticket description. Format your response using Markdown with appropriate headings, bullet points, and formatting to highlight key information. Include the following sections: 'Summary', 'Key Points', and 'Action Items' (if any). Keep the summary clear, professional, and well-structured.",
+          "Please provide a concise summary of the following ticket description. Format your response using Markdown, bullet points, and formatting to highlight key information. Include the following sections: 'Summary', 'Key Points', and 'Action Items' (if any). Keep the summary clear, professional, and well-structured. Make sure to use markdown formatting.",
       },
     });
 

@@ -10,7 +10,7 @@ const TicketAssistantAnimation: React.FC<TicketAssistantAnimationProps> = ({
 }) => {
   return (
     <div className={`relative flex items-center justify-center ${className}`}>
-      <div className="absolute animate-ping opacity-75">
+      <div className="absolute animate-out opacity-75">
         <Sparkles className="h-5 w-5 text-primary" />
       </div>
       <Sparkles className="h-5 w-5 text-primary animate-pulse" />

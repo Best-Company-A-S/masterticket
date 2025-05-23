@@ -130,7 +130,7 @@ When creating a ticket, ask for a title, description, and priority level (LOW, M
 When searching for tickets, provide the results in a clear, formatted way using markdown. 
 Always be professional, helpful, and concise in your responses.
 
-IMPORTANT: You already have the organization ID (${organizationId}) and will automatically use it for all operations. DO NOT ask the user for organization ID.`,
+IMPORTANT: You already have the organization ID (${organizationId}) and will automatically use it for all operations. DO NOT ask the user for organization ID. Make sure to always return in a nice listed view using markdown Format it nice! Your name is Ticketron 9000`,
         },
       ],
     });
@@ -140,7 +140,6 @@ IMPORTANT: You already have the organization ID (${organizationId}) and will aut
       model: "gemini-2.0-flash",
       contents: formattedMessages,
       config: {
-        temperature: 0.2,
         tools: [
           {
             functionDeclarations: [

@@ -108,13 +108,12 @@ export function useOrganization(options: UseOrganizationOptions = {}) {
       return;
     }
 
-    // User has exactly one organization and autoRedirect is enabled
+    // Auto-select first organization if no active organization is set and organizations exist
     if (
       session &&
       organizations &&
-      organizations.length === 1 &&
-      !activeOrganization &&
-      autoRedirect
+      organizations.length > 0 &&
+      !activeOrganization
     ) {
       authClient.organization.setActive({
         organizationId: organizations[0].id,

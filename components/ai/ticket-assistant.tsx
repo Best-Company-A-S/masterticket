@@ -6,6 +6,7 @@ import MarkdownRenderer from "@/components/ui/markdown-renderer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ShinyText from "@/components/ui/shine-text";
 import { Textarea } from "@/components/ui/textarea";
+import { authClient } from "@/lib/auth-client";
 import { useOrganization } from "@/lib/hooks/use-organization";
 import { cn } from "@/lib/utils";
 import {
@@ -17,6 +18,7 @@ import {
   Tag,
   User,
 } from "lucide-react";
+import Image from "next/image";
 import React, {
   forwardRef,
   useEffect,
@@ -58,7 +60,7 @@ const TicketAssistant = forwardRef<TicketAssistantRef, TicketAssistantProps>(
       {
         role: "assistant",
         content:
-          "Hi! I'm your ticket assistant. I can help you create tickets, find tickets by priority, or answer questions about the ticketing system. How can I help you today?",
+          "Hi, I’m Ticketron 9000 🤖! I eat tickets for breakfast. Need to create one, find one, or just vibe with the system? Let’s do this!",
         timestamp: new Date(),
         id: "welcome-message",
       },
@@ -73,6 +75,8 @@ const TicketAssistant = forwardRef<TicketAssistantRef, TicketAssistantProps>(
       null
     );
     const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+    const { data: session } = authClient.useSession();
 
     // Expose the sendMessage method via ref
     useImperativeHandle(ref, () => ({
@@ -172,23 +176,12 @@ const TicketAssistant = forwardRef<TicketAssistantRef, TicketAssistantProps>(
 
         const data = await response.json();
 
-        // Format ticket data in a more readable way
-        let formattedResponse = data.response;
-
-        // Check if the response contains ticket data and format it
-        if (
-          formattedResponse.includes("ID:") &&
-          formattedResponse.includes("Title:")
-        ) {
-          formattedResponse = formatTicketResponse(formattedResponse);
-        }
-
         // Remove loading message and add assistant response
         setMessages((prev) => [
           ...prev.filter((m) => !m.isLoading),
           {
             role: "assistant",
-            content: formattedResponse,
+            content: data.response,
             timestamp: new Date(),
             id: `assistant-${Date.now()}-${Math.random()
               .toString(36)
@@ -212,60 +205,6 @@ const TicketAssistant = forwardRef<TicketAssistantRef, TicketAssistantProps>(
         ]);
       }
       setIsProcessing(false);
-    };
-
-    const formatTicketResponse = (response: string): string => {
-      // First, ensure newline characters are preserved and properly rendered
-      let processed = response;
-
-      // Only add markdown enhancements if we detect a ticket description with specific patterns
-      if (
-        processed.includes("\\n") &&
-        (processed.includes("Description:") ||
-          processed.includes("Steps to Reproduce:") ||
-          processed.includes("Expected Behavior:"))
-      ) {
-        // Preserve the newlines but add proper markdown spacing
-        processed = processed.replace(/\\n\\n/g, "\n\n");
-        processed = processed.replace(/\\n/g, "\n");
-
-        // Add markdown formatting to emoji headers without changing the structure
-        processed = processed.replace(
-          /([\u{1F300}-\u{1F6FF}|[\u{2600}-\u{26FF}])\s*([A-Za-z\s]+):/gu,
-          "**$1 $2:**"
-        );
-
-        // Enhance numbered lists while preserving the original format
-        processed = processed.replace(/\n\n\s*(\d+)\.\s+/g, "\n\n$1. ");
-      }
-
-      // Convert ticket IDs to markdown links
-      if (
-        processed.includes("IDs of the") ||
-        processed.includes("ticket IDs") ||
-        processed.includes("ID:") ||
-        processed.includes("priority tickets:")
-      ) {
-        // First handle IDs after bullet points
-        processed = processed.replace(
-          /([•*]\s*ID:\s*)([a-zA-Z0-9]{24,})/g,
-          "$1[$2](/dashboard/tickets/$2)"
-        );
-
-        // Then handle IDs in regular text with proper spacing
-        processed = processed.replace(
-          /(\s{4,})([a-zA-Z0-9]{24,})\b/g,
-          "$1[$2](/dashboard/tickets/$2)"
-        );
-
-        // Finally handle any remaining IDs
-        processed = processed.replace(
-          /\b([a-zA-Z0-9]{24,})\b/g,
-          "[$1](/dashboard/tickets/$1)"
-        );
-      }
-
-      return processed;
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -344,7 +283,7 @@ const TicketAssistant = forwardRef<TicketAssistantRef, TicketAssistantProps>(
           <div className="flex items-center gap-3">
             <TicketAssistantAnimation />
             <div>
-              <h2 className="font-semibold text-lg">Ticket Assistant AI</h2>
+              <h2 className="font-semibold text-lg">Ticketron 9000</h2>
               <p className="text-xs text-muted-foreground">Powered by Gemini</p>
             </div>
           </div>
@@ -379,7 +318,11 @@ const TicketAssistant = forwardRef<TicketAssistantRef, TicketAssistantProps>(
                     )}
                   >
                     {message.role === "user" ? (
-                      <User className="h-4 w-4" />
+                      <img
+                        src={session?.user.image || ""}
+                        alt="User avatar"
+                        className="h-8 w-8 rounded-full"
+                      />
                     ) : (
                       <FaRobot className="h-4 w-4" />
                     )}
