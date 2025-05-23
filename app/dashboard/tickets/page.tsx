@@ -20,6 +20,8 @@ export default function TicketsPage() {
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
   const [selectedAssignments, setSelectedAssignments] = useState<string[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
 
   // Map API tickets to UI tickets format
   const mapApiTicketsToUiTickets = (apiTickets: ApiTicket[]): UITicket[] => {
@@ -78,7 +80,7 @@ export default function TicketsPage() {
       );
     }
 
-    // Apply assignment filter
+    // Apply assignment type filter
     if (selectedAssignments.length > 0) {
       filtered = filtered.filter((ticket) => {
         if (selectedAssignments.includes("unassigned")) {
@@ -100,8 +102,29 @@ export default function TicketsPage() {
       });
     }
 
+    // Apply specific user filter
+    if (selectedUserId) {
+      filtered = filtered.filter(
+        (ticket) => ticket.assignedToUserId === selectedUserId
+      );
+    }
+
+    // Apply specific team filter
+    if (selectedTeamId) {
+      filtered = filtered.filter(
+        (ticket) => ticket.assignedToTeamId === selectedTeamId
+      );
+    }
+
     setFilteredData(mapApiTicketsToUiTickets(filtered));
-  }, [tickets, selectedStatuses, selectedPriorities, selectedAssignments]);
+  }, [
+    tickets,
+    selectedStatuses,
+    selectedPriorities,
+    selectedAssignments,
+    selectedUserId,
+    selectedTeamId,
+  ]);
 
   // Handle search
   const handleSearch = (term: string) => {
@@ -132,6 +155,26 @@ export default function TicketsPage() {
     setSelectedAssignments(assignments);
   };
 
+  // Handle specific user filter
+  const handleSpecificUserChange = (userId: string | null) => {
+    setSelectedUserId(userId);
+
+    // Clear team filter if user is selected
+    if (userId) {
+      setSelectedTeamId(null);
+    }
+  };
+
+  // Handle specific team filter
+  const handleSpecificTeamChange = (teamId: string | null) => {
+    setSelectedTeamId(teamId);
+
+    // Clear user filter if team is selected
+    if (teamId) {
+      setSelectedUserId(null);
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="flex items-center justify-between">
@@ -156,6 +199,8 @@ export default function TicketsPage() {
           onStatusChange={handleStatusFilter}
           onPriorityChange={handlePriorityFilter}
           onAssignmentChange={handleAssignmentFilter}
+          onSpecificUserChange={handleSpecificUserChange}
+          onSpecificTeamChange={handleSpecificTeamChange}
         />
       </div>
 
