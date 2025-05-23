@@ -56,8 +56,8 @@ export function DataTable<TData, TValue>({
 
   // Set search term from parent component
   React.useEffect(() => {
-    if (searchTerm && table.getColumn("subject")) {
-      table.getColumn("subject")?.setFilterValue(searchTerm);
+    if (searchTerm && table.getColumn("title")) {
+      table.getColumn("title")?.setFilterValue(searchTerm);
     }
   }, [searchTerm]);
 
@@ -195,9 +195,7 @@ export function DataTable<TData, TValue>({
                 {getCellContent(row, "actions")}
               </CardHeader>
               <CardContent className="p-4 pt-2 space-y-2">
-                <div className="font-medium">
-                  {(row.original as any).subject}
-                </div>
+                <div className="font-medium">{(row.original as any).title}</div>
                 <div className="flex flex-wrap gap-2 text-sm">
                   <div className="flex items-center gap-1">
                     <span className="text-muted-foreground">Status:</span>

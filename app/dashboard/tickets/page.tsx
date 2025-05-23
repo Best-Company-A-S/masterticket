@@ -20,14 +20,15 @@ export default function TicketsPage() {
   const mapApiTicketsToUiTickets = (apiTickets: ApiTicket[]): UITicket[] => {
     return apiTickets.map((ticket) => ({
       id: ticket.id,
-      subject: ticket.title,
+      title: ticket.title,
       status: ticket.status,
       priority: ticket.priority,
-      assignedAgent: "Unassigned", // This field doesn't exist in API ticket
       resolutionTime: ticket.responseTime
         ? `${formatResponseTime(ticket.responseTime)}`
         : "N/A",
-      commentCount: (ticket as any).commentCount || 0, // Add commentCount
+      commentCount: (ticket as any).commentCount || 0,
+      assignedToUser: ticket.assignedToUser,
+      assignedToTeam: ticket.assignedToTeam,
     }));
   };
 

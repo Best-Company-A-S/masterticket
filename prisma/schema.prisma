@@ -34,7 +34,8 @@ model User {
   accounts      Account[]
   members       Member[]
   invitations   Invitation[] @relation("inviter")
-  comments TicketComment[]
+  comments      TicketComment[]
+  assignedTickets Ticket[] @relation("AssignedTickets")
 }
 
 model Session {
@@ -146,6 +147,7 @@ model Team {
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   members      Member[]
   invitations  Invitation[]
+  assignedTickets Ticket[] @relation("AssignedTickets")
   
   @@unique([name, organizationId])
 }
@@ -175,7 +177,14 @@ model Ticket {
   updatedAt DateTime @updatedAt
   responseTime Float?
   organizationId String
+  
+  // Assignment fields
+  assignedToUserId String?
+  assignedToTeamId String?
+  
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  assignedToUser User? @relation("AssignedTickets", fields: [assignedToUserId], references: [id], onDelete: SetNull)
+  assignedToTeam Team? @relation("AssignedTickets", fields: [assignedToTeamId], references: [id], onDelete: SetNull)
   comments TicketComment[]
 }
 

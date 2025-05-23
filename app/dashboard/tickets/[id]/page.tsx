@@ -14,6 +14,8 @@ import {
   Sparkles,
   ChevronDown,
   ChevronRight,
+  User,
+  Users,
 } from "lucide-react";
 import { useTickets, Ticket } from "@/lib/hooks/use-tickets";
 import { formatDistanceToNow } from "date-fns";
@@ -23,6 +25,7 @@ import DeleteTicketDialog from "@/components/tickets/delete-ticket-dialog";
 import ShinyText from "@/components/ui/shine-text";
 import LoadingDots from "@/components/ui/loading-dots";
 import MarkdownRenderer from "@/components/ui/markdown-renderer";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default function TicketDetailsPage() {
   const params = useParams();
@@ -306,6 +309,57 @@ export default function TicketDetailsPage() {
                         <div>{commentCount} comments</div>
                       </div>
                     </div>
+
+                    {/* Assignment Information */}
+                    {ticket.assignedToUser && (
+                      <div className="flex items-center gap-2">
+                        <User className="h-4 w-4 text-muted-foreground" />
+                        <div>
+                          <div className="text-sm font-medium">Assigned To</div>
+                          <div className="flex items-center gap-2">
+                            <Avatar className="h-5 w-5">
+                              <AvatarImage
+                                src={ticket.assignedToUser.image || ""}
+                                alt={ticket.assignedToUser.name || ""}
+                              />
+                              <AvatarFallback className="text-xs">
+                                {ticket.assignedToUser.name
+                                  ?.substring(0, 2)
+                                  .toUpperCase() || "U"}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span>
+                              {ticket.assignedToUser.name ||
+                                ticket.assignedToUser.email}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {ticket.assignedToTeam && (
+                      <div className="flex items-center gap-2">
+                        <Users className="h-4 w-4 text-muted-foreground" />
+                        <div>
+                          <div className="text-sm font-medium">
+                            Assigned Team
+                          </div>
+                          <div>{ticket.assignedToTeam.name}</div>
+                        </div>
+                      </div>
+                    )}
+
+                    {!ticket.assignedToUser && !ticket.assignedToTeam && (
+                      <div className="flex items-center gap-2">
+                        <User className="h-4 w-4 text-muted-foreground" />
+                        <div>
+                          <div className="text-sm font-medium">Assignment</div>
+                          <div className="text-muted-foreground">
+                            Unassigned
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

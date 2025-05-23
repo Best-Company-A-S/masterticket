@@ -28,6 +28,19 @@ export interface Ticket {
   updatedAt: Date;
   organizationId: string;
   responseTime?: number | null;
+  // Assignment fields
+  assignedToUserId?: string | null;
+  assignedToTeamId?: string | null;
+  assignedToUser?: {
+    id: string;
+    name: string | null;
+    email: string;
+    image?: string | null;
+  } | null;
+  assignedToTeam?: {
+    id: string;
+    name: string;
+  } | null;
 }
 
 export interface TicketStats {
@@ -41,6 +54,8 @@ export interface CreateTicketInput {
   description: string;
   priority: TicketPriority;
   status: TicketStatus;
+  assignedToUserId?: string | null;
+  assignedToTeamId?: string | null;
 }
 
 export interface UpdateTicketInput {
@@ -49,6 +64,8 @@ export interface UpdateTicketInput {
   description: string;
   priority: TicketPriority;
   status: TicketStatus;
+  assignedToUserId?: string | null;
+  assignedToTeamId?: string | null;
 }
 
 // Create an axios instance with default config

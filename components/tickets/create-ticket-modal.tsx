@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
+import AssignmentSelector from "./assignment-selector";
 
 interface CreateTicketModalProps {
   buttonVariant?:
@@ -58,8 +59,18 @@ export default function CreateTicketModal({
     TicketPriority.MEDIUM
   );
   const [status, setStatus] = useState<TicketStatus>(TicketStatus.OPEN);
+  const [assignedToUserId, setAssignedToUserId] = useState<string | null>(null);
+  const [assignedToTeamId, setAssignedToTeamId] = useState<string | null>(null);
 
   const { createTicket } = useTickets();
+
+  const handleAssignmentChange = (
+    userId: string | null,
+    teamId: string | null
+  ) => {
+    setAssignedToUserId(userId);
+    setAssignedToTeamId(teamId);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,6 +90,8 @@ export default function CreateTicketModal({
         description,
         priority,
         status,
+        assignedToUserId,
+        assignedToTeamId,
       });
 
       if (result) {
@@ -91,6 +104,8 @@ export default function CreateTicketModal({
         setDescription("");
         setPriority(TicketPriority.MEDIUM);
         setStatus(TicketStatus.OPEN);
+        setAssignedToUserId(null);
+        setAssignedToTeamId(null);
 
         // Close modal
         setOpen(false);
@@ -121,7 +136,7 @@ export default function CreateTicketModal({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Create New Ticket</DialogTitle>
@@ -196,6 +211,14 @@ export default function CreateTicketModal({
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+            <div className="border-t pt-4">
+              <AssignmentSelector
+                assignedToUserId={assignedToUserId}
+                assignedToTeamId={assignedToTeamId}
+                onAssignmentChange={handleAssignmentChange}
+                disabled={isSubmitting}
+              />
             </div>
           </div>
           <DialogFooter>

@@ -1726,6 +1726,7 @@ export namespace Prisma {
     members: number
     invitations: number
     comments: number
+    assignedTickets: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1734,6 +1735,7 @@ export namespace Prisma {
     members?: boolean | UserCountOutputTypeCountMembersArgs
     invitations?: boolean | UserCountOutputTypeCountInvitationsArgs
     comments?: boolean | UserCountOutputTypeCountCommentsArgs
+    assignedTickets?: boolean | UserCountOutputTypeCountAssignedTicketsArgs
   }
 
   // Custom InputTypes
@@ -1780,6 +1782,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TicketCommentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAssignedTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TicketWhereInput
   }
 
 
@@ -1857,11 +1866,13 @@ export namespace Prisma {
   export type TeamCountOutputType = {
     members: number
     invitations: number
+    assignedTickets: number
   }
 
   export type TeamCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | TeamCountOutputTypeCountMembersArgs
     invitations?: boolean | TeamCountOutputTypeCountInvitationsArgs
+    assignedTickets?: boolean | TeamCountOutputTypeCountAssignedTicketsArgs
   }
 
   // Custom InputTypes
@@ -1887,6 +1898,13 @@ export namespace Prisma {
    */
   export type TeamCountOutputTypeCountInvitationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: InvitationWhereInput
+  }
+
+  /**
+   * TeamCountOutputType without action
+   */
+  export type TeamCountOutputTypeCountAssignedTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TicketWhereInput
   }
 
 
@@ -2173,6 +2191,7 @@ export namespace Prisma {
     members?: boolean | User$membersArgs<ExtArgs>
     invitations?: boolean | User$invitationsArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
+    assignedTickets?: boolean | User$assignedTicketsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2225,6 +2244,7 @@ export namespace Prisma {
     members?: boolean | User$membersArgs<ExtArgs>
     invitations?: boolean | User$invitationsArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
+    assignedTickets?: boolean | User$assignedTicketsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2238,6 +2258,7 @@ export namespace Prisma {
       members: Prisma.$MemberPayload<ExtArgs>[]
       invitations: Prisma.$InvitationPayload<ExtArgs>[]
       comments: Prisma.$TicketCommentPayload<ExtArgs>[]
+      assignedTickets: Prisma.$TicketPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2650,6 +2671,7 @@ export namespace Prisma {
     members<T extends User$membersArgs<ExtArgs> = {}>(args?: Subset<T, User$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invitations<T extends User$invitationsArgs<ExtArgs> = {}>(args?: Subset<T, User$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends User$commentsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TicketCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assignedTickets<T extends User$assignedTicketsArgs<ExtArgs> = {}>(args?: Subset<T, User$assignedTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3195,6 +3217,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TicketCommentScalarFieldEnum | TicketCommentScalarFieldEnum[]
+  }
+
+  /**
+   * User.assignedTickets
+   */
+  export type User$assignedTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Ticket
+     */
+    select?: TicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Ticket
+     */
+    omit?: TicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TicketInclude<ExtArgs> | null
+    where?: TicketWhereInput
+    orderBy?: TicketOrderByWithRelationInput | TicketOrderByWithRelationInput[]
+    cursor?: TicketWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TicketScalarFieldEnum | TicketScalarFieldEnum[]
   }
 
   /**
@@ -10167,6 +10213,7 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     members?: boolean | Team$membersArgs<ExtArgs>
     invitations?: boolean | Team$invitationsArgs<ExtArgs>
+    assignedTickets?: boolean | Team$assignedTicketsArgs<ExtArgs>
     _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["team"]>
 
@@ -10201,6 +10248,7 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     members?: boolean | Team$membersArgs<ExtArgs>
     invitations?: boolean | Team$invitationsArgs<ExtArgs>
+    assignedTickets?: boolean | Team$assignedTicketsArgs<ExtArgs>
     _count?: boolean | TeamCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TeamIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10216,6 +10264,7 @@ export namespace Prisma {
       organization: Prisma.$OrganizationPayload<ExtArgs>
       members: Prisma.$MemberPayload<ExtArgs>[]
       invitations: Prisma.$InvitationPayload<ExtArgs>[]
+      assignedTickets: Prisma.$TicketPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10620,6 +10669,7 @@ export namespace Prisma {
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     members<T extends Team$membersArgs<ExtArgs> = {}>(args?: Subset<T, Team$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invitations<T extends Team$invitationsArgs<ExtArgs> = {}>(args?: Subset<T, Team$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    assignedTickets<T extends Team$assignedTicketsArgs<ExtArgs> = {}>(args?: Subset<T, Team$assignedTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11098,6 +11148,30 @@ export namespace Prisma {
   }
 
   /**
+   * Team.assignedTickets
+   */
+  export type Team$assignedTicketsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Ticket
+     */
+    select?: TicketSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Ticket
+     */
+    omit?: TicketOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TicketInclude<ExtArgs> | null
+    where?: TicketWhereInput
+    orderBy?: TicketOrderByWithRelationInput | TicketOrderByWithRelationInput[]
+    cursor?: TicketWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TicketScalarFieldEnum | TicketScalarFieldEnum[]
+  }
+
+  /**
    * Team without action
    */
   export type TeamDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11146,6 +11220,8 @@ export namespace Prisma {
     updatedAt: Date | null
     responseTime: number | null
     organizationId: string | null
+    assignedToUserId: string | null
+    assignedToTeamId: string | null
   }
 
   export type TicketMaxAggregateOutputType = {
@@ -11158,6 +11234,8 @@ export namespace Prisma {
     updatedAt: Date | null
     responseTime: number | null
     organizationId: string | null
+    assignedToUserId: string | null
+    assignedToTeamId: string | null
   }
 
   export type TicketCountAggregateOutputType = {
@@ -11170,6 +11248,8 @@ export namespace Prisma {
     updatedAt: number
     responseTime: number
     organizationId: number
+    assignedToUserId: number
+    assignedToTeamId: number
     _all: number
   }
 
@@ -11192,6 +11272,8 @@ export namespace Prisma {
     updatedAt?: true
     responseTime?: true
     organizationId?: true
+    assignedToUserId?: true
+    assignedToTeamId?: true
   }
 
   export type TicketMaxAggregateInputType = {
@@ -11204,6 +11286,8 @@ export namespace Prisma {
     updatedAt?: true
     responseTime?: true
     organizationId?: true
+    assignedToUserId?: true
+    assignedToTeamId?: true
   }
 
   export type TicketCountAggregateInputType = {
@@ -11216,6 +11300,8 @@ export namespace Prisma {
     updatedAt?: true
     responseTime?: true
     organizationId?: true
+    assignedToUserId?: true
+    assignedToTeamId?: true
     _all?: true
   }
 
@@ -11315,6 +11401,8 @@ export namespace Prisma {
     updatedAt: Date
     responseTime: number | null
     organizationId: string
+    assignedToUserId: string | null
+    assignedToTeamId: string | null
     _count: TicketCountAggregateOutputType | null
     _avg: TicketAvgAggregateOutputType | null
     _sum: TicketSumAggregateOutputType | null
@@ -11346,7 +11434,11 @@ export namespace Prisma {
     updatedAt?: boolean
     responseTime?: boolean
     organizationId?: boolean
+    assignedToUserId?: boolean
+    assignedToTeamId?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    assignedToUser?: boolean | Ticket$assignedToUserArgs<ExtArgs>
+    assignedToTeam?: boolean | Ticket$assignedToTeamArgs<ExtArgs>
     comments?: boolean | Ticket$commentsArgs<ExtArgs>
     _count?: boolean | TicketCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["ticket"]>
@@ -11361,7 +11453,11 @@ export namespace Prisma {
     updatedAt?: boolean
     responseTime?: boolean
     organizationId?: boolean
+    assignedToUserId?: boolean
+    assignedToTeamId?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    assignedToUser?: boolean | Ticket$assignedToUserArgs<ExtArgs>
+    assignedToTeam?: boolean | Ticket$assignedToTeamArgs<ExtArgs>
   }, ExtArgs["result"]["ticket"]>
 
   export type TicketSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11374,7 +11470,11 @@ export namespace Prisma {
     updatedAt?: boolean
     responseTime?: boolean
     organizationId?: boolean
+    assignedToUserId?: boolean
+    assignedToTeamId?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    assignedToUser?: boolean | Ticket$assignedToUserArgs<ExtArgs>
+    assignedToTeam?: boolean | Ticket$assignedToTeamArgs<ExtArgs>
   }, ExtArgs["result"]["ticket"]>
 
   export type TicketSelectScalar = {
@@ -11387,25 +11487,35 @@ export namespace Prisma {
     updatedAt?: boolean
     responseTime?: boolean
     organizationId?: boolean
+    assignedToUserId?: boolean
+    assignedToTeamId?: boolean
   }
 
-  export type TicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "status" | "priority" | "createdAt" | "updatedAt" | "responseTime" | "organizationId", ExtArgs["result"]["ticket"]>
+  export type TicketOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "status" | "priority" | "createdAt" | "updatedAt" | "responseTime" | "organizationId" | "assignedToUserId" | "assignedToTeamId", ExtArgs["result"]["ticket"]>
   export type TicketInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    assignedToUser?: boolean | Ticket$assignedToUserArgs<ExtArgs>
+    assignedToTeam?: boolean | Ticket$assignedToTeamArgs<ExtArgs>
     comments?: boolean | Ticket$commentsArgs<ExtArgs>
     _count?: boolean | TicketCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TicketIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    assignedToUser?: boolean | Ticket$assignedToUserArgs<ExtArgs>
+    assignedToTeam?: boolean | Ticket$assignedToTeamArgs<ExtArgs>
   }
   export type TicketIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    assignedToUser?: boolean | Ticket$assignedToUserArgs<ExtArgs>
+    assignedToTeam?: boolean | Ticket$assignedToTeamArgs<ExtArgs>
   }
 
   export type $TicketPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Ticket"
     objects: {
       organization: Prisma.$OrganizationPayload<ExtArgs>
+      assignedToUser: Prisma.$UserPayload<ExtArgs> | null
+      assignedToTeam: Prisma.$TeamPayload<ExtArgs> | null
       comments: Prisma.$TicketCommentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -11418,6 +11528,8 @@ export namespace Prisma {
       updatedAt: Date
       responseTime: number | null
       organizationId: string
+      assignedToUserId: string | null
+      assignedToTeamId: string | null
     }, ExtArgs["result"]["ticket"]>
     composites: {}
   }
@@ -11813,6 +11925,8 @@ export namespace Prisma {
   export interface Prisma__TicketClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    assignedToUser<T extends Ticket$assignedToUserArgs<ExtArgs> = {}>(args?: Subset<T, Ticket$assignedToUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    assignedToTeam<T extends Ticket$assignedToTeamArgs<ExtArgs> = {}>(args?: Subset<T, Ticket$assignedToTeamArgs<ExtArgs>>): Prisma__TeamClient<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     comments<T extends Ticket$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Ticket$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TicketCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -11852,6 +11966,8 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"Ticket", 'DateTime'>
     readonly responseTime: FieldRef<"Ticket", 'Float'>
     readonly organizationId: FieldRef<"Ticket", 'String'>
+    readonly assignedToUserId: FieldRef<"Ticket", 'String'>
+    readonly assignedToTeamId: FieldRef<"Ticket", 'String'>
   }
     
 
@@ -12245,6 +12361,44 @@ export namespace Prisma {
      * Limit how many Tickets to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Ticket.assignedToUser
+   */
+  export type Ticket$assignedToUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Ticket.assignedToTeam
+   */
+  export type Ticket$assignedToTeamArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Team
+     */
+    select?: TeamSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Team
+     */
+    omit?: TeamOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TeamInclude<ExtArgs> | null
+    where?: TeamWhereInput
   }
 
   /**
@@ -13578,7 +13732,9 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     responseTime: 'responseTime',
-    organizationId: 'organizationId'
+    organizationId: 'organizationId',
+    assignedToUserId: 'assignedToUserId',
+    assignedToTeamId: 'assignedToTeamId'
   };
 
   export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
@@ -13771,6 +13927,7 @@ export namespace Prisma {
     members?: MemberListRelationFilter
     invitations?: InvitationListRelationFilter
     comments?: TicketCommentListRelationFilter
+    assignedTickets?: TicketListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -13790,6 +13947,7 @@ export namespace Prisma {
     members?: MemberOrderByRelationAggregateInput
     invitations?: InvitationOrderByRelationAggregateInput
     comments?: TicketCommentOrderByRelationAggregateInput
+    assignedTickets?: TicketOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -13812,6 +13970,7 @@ export namespace Prisma {
     members?: MemberListRelationFilter
     invitations?: InvitationListRelationFilter
     comments?: TicketCommentListRelationFilter
+    assignedTickets?: TicketListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -14328,6 +14487,7 @@ export namespace Prisma {
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     members?: MemberListRelationFilter
     invitations?: InvitationListRelationFilter
+    assignedTickets?: TicketListRelationFilter
   }
 
   export type TeamOrderByWithRelationInput = {
@@ -14339,6 +14499,7 @@ export namespace Prisma {
     organization?: OrganizationOrderByWithRelationInput
     members?: MemberOrderByRelationAggregateInput
     invitations?: InvitationOrderByRelationAggregateInput
+    assignedTickets?: TicketOrderByRelationAggregateInput
   }
 
   export type TeamWhereUniqueInput = Prisma.AtLeast<{
@@ -14354,6 +14515,7 @@ export namespace Prisma {
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     members?: MemberListRelationFilter
     invitations?: InvitationListRelationFilter
+    assignedTickets?: TicketListRelationFilter
   }, "id" | "name_organizationId">
 
   export type TeamOrderByWithAggregationInput = {
@@ -14391,7 +14553,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Ticket"> | Date | string
     responseTime?: FloatNullableFilter<"Ticket"> | number | null
     organizationId?: StringFilter<"Ticket"> | string
+    assignedToUserId?: StringNullableFilter<"Ticket"> | string | null
+    assignedToTeamId?: StringNullableFilter<"Ticket"> | string | null
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    assignedToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    assignedToTeam?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
     comments?: TicketCommentListRelationFilter
   }
 
@@ -14405,7 +14571,11 @@ export namespace Prisma {
     updatedAt?: SortOrder
     responseTime?: SortOrderInput | SortOrder
     organizationId?: SortOrder
+    assignedToUserId?: SortOrderInput | SortOrder
+    assignedToTeamId?: SortOrderInput | SortOrder
     organization?: OrganizationOrderByWithRelationInput
+    assignedToUser?: UserOrderByWithRelationInput
+    assignedToTeam?: TeamOrderByWithRelationInput
     comments?: TicketCommentOrderByRelationAggregateInput
   }
 
@@ -14422,7 +14592,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Ticket"> | Date | string
     responseTime?: FloatNullableFilter<"Ticket"> | number | null
     organizationId?: StringFilter<"Ticket"> | string
+    assignedToUserId?: StringNullableFilter<"Ticket"> | string | null
+    assignedToTeamId?: StringNullableFilter<"Ticket"> | string | null
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    assignedToUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    assignedToTeam?: XOR<TeamNullableScalarRelationFilter, TeamWhereInput> | null
     comments?: TicketCommentListRelationFilter
   }, "id">
 
@@ -14436,6 +14610,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     responseTime?: SortOrderInput | SortOrder
     organizationId?: SortOrder
+    assignedToUserId?: SortOrderInput | SortOrder
+    assignedToTeamId?: SortOrderInput | SortOrder
     _count?: TicketCountOrderByAggregateInput
     _avg?: TicketAvgOrderByAggregateInput
     _max?: TicketMaxOrderByAggregateInput
@@ -14456,6 +14632,8 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Ticket"> | Date | string
     responseTime?: FloatNullableWithAggregatesFilter<"Ticket"> | number | null
     organizationId?: StringWithAggregatesFilter<"Ticket"> | string
+    assignedToUserId?: StringNullableWithAggregatesFilter<"Ticket"> | string | null
+    assignedToTeamId?: StringNullableWithAggregatesFilter<"Ticket"> | string | null
   }
 
   export type TicketCommentWhereInput = {
@@ -14549,6 +14727,7 @@ export namespace Prisma {
     members?: MemberCreateNestedManyWithoutUserInput
     invitations?: InvitationCreateNestedManyWithoutInviterInput
     comments?: TicketCommentCreateNestedManyWithoutAuthorInput
+    assignedTickets?: TicketCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -14568,6 +14747,7 @@ export namespace Prisma {
     members?: MemberUncheckedCreateNestedManyWithoutUserInput
     invitations?: InvitationUncheckedCreateNestedManyWithoutInviterInput
     comments?: TicketCommentUncheckedCreateNestedManyWithoutAuthorInput
+    assignedTickets?: TicketUncheckedCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserUpdateInput = {
@@ -14587,6 +14767,7 @@ export namespace Prisma {
     members?: MemberUpdateManyWithoutUserNestedInput
     invitations?: InvitationUpdateManyWithoutInviterNestedInput
     comments?: TicketCommentUpdateManyWithoutAuthorNestedInput
+    assignedTickets?: TicketUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -14606,6 +14787,7 @@ export namespace Prisma {
     members?: MemberUncheckedUpdateManyWithoutUserNestedInput
     invitations?: InvitationUncheckedUpdateManyWithoutInviterNestedInput
     comments?: TicketCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    assignedTickets?: TicketUncheckedUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -15159,6 +15341,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutTeamsInput
     members?: MemberCreateNestedManyWithoutTeamInput
     invitations?: InvitationCreateNestedManyWithoutTeamInput
+    assignedTickets?: TicketCreateNestedManyWithoutAssignedToTeamInput
   }
 
   export type TeamUncheckedCreateInput = {
@@ -15169,6 +15352,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: MemberUncheckedCreateNestedManyWithoutTeamInput
     invitations?: InvitationUncheckedCreateNestedManyWithoutTeamInput
+    assignedTickets?: TicketUncheckedCreateNestedManyWithoutAssignedToTeamInput
   }
 
   export type TeamUpdateInput = {
@@ -15179,6 +15363,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutTeamsNestedInput
     members?: MemberUpdateManyWithoutTeamNestedInput
     invitations?: InvitationUpdateManyWithoutTeamNestedInput
+    assignedTickets?: TicketUpdateManyWithoutAssignedToTeamNestedInput
   }
 
   export type TeamUncheckedUpdateInput = {
@@ -15189,6 +15374,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUncheckedUpdateManyWithoutTeamNestedInput
     invitations?: InvitationUncheckedUpdateManyWithoutTeamNestedInput
+    assignedTickets?: TicketUncheckedUpdateManyWithoutAssignedToTeamNestedInput
   }
 
   export type TeamCreateManyInput = {
@@ -15224,6 +15410,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     responseTime?: number | null
     organization: OrganizationCreateNestedOneWithoutTicketsInput
+    assignedToUser?: UserCreateNestedOneWithoutAssignedTicketsInput
+    assignedToTeam?: TeamCreateNestedOneWithoutAssignedTicketsInput
     comments?: TicketCommentCreateNestedManyWithoutTicketInput
   }
 
@@ -15237,6 +15425,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     responseTime?: number | null
     organizationId: string
+    assignedToUserId?: string | null
+    assignedToTeamId?: string | null
     comments?: TicketCommentUncheckedCreateNestedManyWithoutTicketInput
   }
 
@@ -15250,6 +15440,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     organization?: OrganizationUpdateOneRequiredWithoutTicketsNestedInput
+    assignedToUser?: UserUpdateOneWithoutAssignedTicketsNestedInput
+    assignedToTeam?: TeamUpdateOneWithoutAssignedTicketsNestedInput
     comments?: TicketCommentUpdateManyWithoutTicketNestedInput
   }
 
@@ -15263,6 +15455,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     organizationId?: StringFieldUpdateOperationsInput | string
+    assignedToUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToTeamId?: NullableStringFieldUpdateOperationsInput | string | null
     comments?: TicketCommentUncheckedUpdateManyWithoutTicketNestedInput
   }
 
@@ -15276,6 +15470,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     responseTime?: number | null
     organizationId: string
+    assignedToUserId?: string | null
+    assignedToTeamId?: string | null
   }
 
   export type TicketUpdateManyMutationInput = {
@@ -15299,6 +15495,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     organizationId?: StringFieldUpdateOperationsInput | string
+    assignedToUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToTeamId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TicketCommentCreateInput = {
@@ -15459,6 +15657,12 @@ export namespace Prisma {
     none?: TicketCommentWhereInput
   }
 
+  export type TicketListRelationFilter = {
+    every?: TicketWhereInput
+    some?: TicketWhereInput
+    none?: TicketWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -15481,6 +15685,10 @@ export namespace Prisma {
   }
 
   export type TicketCommentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TicketOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -15755,20 +15963,10 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type TicketListRelationFilter = {
-    every?: TicketWhereInput
-    some?: TicketWhereInput
-    none?: TicketWhereInput
-  }
-
   export type TeamListRelationFilter = {
     every?: TeamWhereInput
     some?: TeamWhereInput
     none?: TeamWhereInput
-  }
-
-  export type TicketOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type TeamOrderByRelationAggregateInput = {
@@ -15968,6 +16166,11 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type TicketCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -15978,6 +16181,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     responseTime?: SortOrder
     organizationId?: SortOrder
+    assignedToUserId?: SortOrder
+    assignedToTeamId?: SortOrder
   }
 
   export type TicketAvgOrderByAggregateInput = {
@@ -15994,6 +16199,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     responseTime?: SortOrder
     organizationId?: SortOrder
+    assignedToUserId?: SortOrder
+    assignedToTeamId?: SortOrder
   }
 
   export type TicketMinOrderByAggregateInput = {
@@ -16006,6 +16213,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     responseTime?: SortOrder
     organizationId?: SortOrder
+    assignedToUserId?: SortOrder
+    assignedToTeamId?: SortOrder
   }
 
   export type TicketSumOrderByAggregateInput = {
@@ -16123,6 +16332,13 @@ export namespace Prisma {
     connect?: TicketCommentWhereUniqueInput | TicketCommentWhereUniqueInput[]
   }
 
+  export type TicketCreateNestedManyWithoutAssignedToUserInput = {
+    create?: XOR<TicketCreateWithoutAssignedToUserInput, TicketUncheckedCreateWithoutAssignedToUserInput> | TicketCreateWithoutAssignedToUserInput[] | TicketUncheckedCreateWithoutAssignedToUserInput[]
+    connectOrCreate?: TicketCreateOrConnectWithoutAssignedToUserInput | TicketCreateOrConnectWithoutAssignedToUserInput[]
+    createMany?: TicketCreateManyAssignedToUserInputEnvelope
+    connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -16156,6 +16372,13 @@ export namespace Prisma {
     connectOrCreate?: TicketCommentCreateOrConnectWithoutAuthorInput | TicketCommentCreateOrConnectWithoutAuthorInput[]
     createMany?: TicketCommentCreateManyAuthorInputEnvelope
     connect?: TicketCommentWhereUniqueInput | TicketCommentWhereUniqueInput[]
+  }
+
+  export type TicketUncheckedCreateNestedManyWithoutAssignedToUserInput = {
+    create?: XOR<TicketCreateWithoutAssignedToUserInput, TicketUncheckedCreateWithoutAssignedToUserInput> | TicketCreateWithoutAssignedToUserInput[] | TicketUncheckedCreateWithoutAssignedToUserInput[]
+    connectOrCreate?: TicketCreateOrConnectWithoutAssignedToUserInput | TicketCreateOrConnectWithoutAssignedToUserInput[]
+    createMany?: TicketCreateManyAssignedToUserInputEnvelope
+    connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -16248,6 +16471,20 @@ export namespace Prisma {
     deleteMany?: TicketCommentScalarWhereInput | TicketCommentScalarWhereInput[]
   }
 
+  export type TicketUpdateManyWithoutAssignedToUserNestedInput = {
+    create?: XOR<TicketCreateWithoutAssignedToUserInput, TicketUncheckedCreateWithoutAssignedToUserInput> | TicketCreateWithoutAssignedToUserInput[] | TicketUncheckedCreateWithoutAssignedToUserInput[]
+    connectOrCreate?: TicketCreateOrConnectWithoutAssignedToUserInput | TicketCreateOrConnectWithoutAssignedToUserInput[]
+    upsert?: TicketUpsertWithWhereUniqueWithoutAssignedToUserInput | TicketUpsertWithWhereUniqueWithoutAssignedToUserInput[]
+    createMany?: TicketCreateManyAssignedToUserInputEnvelope
+    set?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    disconnect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    delete?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    update?: TicketUpdateWithWhereUniqueWithoutAssignedToUserInput | TicketUpdateWithWhereUniqueWithoutAssignedToUserInput[]
+    updateMany?: TicketUpdateManyWithWhereWithoutAssignedToUserInput | TicketUpdateManyWithWhereWithoutAssignedToUserInput[]
+    deleteMany?: TicketScalarWhereInput | TicketScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -16316,6 +16553,20 @@ export namespace Prisma {
     update?: TicketCommentUpdateWithWhereUniqueWithoutAuthorInput | TicketCommentUpdateWithWhereUniqueWithoutAuthorInput[]
     updateMany?: TicketCommentUpdateManyWithWhereWithoutAuthorInput | TicketCommentUpdateManyWithWhereWithoutAuthorInput[]
     deleteMany?: TicketCommentScalarWhereInput | TicketCommentScalarWhereInput[]
+  }
+
+  export type TicketUncheckedUpdateManyWithoutAssignedToUserNestedInput = {
+    create?: XOR<TicketCreateWithoutAssignedToUserInput, TicketUncheckedCreateWithoutAssignedToUserInput> | TicketCreateWithoutAssignedToUserInput[] | TicketUncheckedCreateWithoutAssignedToUserInput[]
+    connectOrCreate?: TicketCreateOrConnectWithoutAssignedToUserInput | TicketCreateOrConnectWithoutAssignedToUserInput[]
+    upsert?: TicketUpsertWithWhereUniqueWithoutAssignedToUserInput | TicketUpsertWithWhereUniqueWithoutAssignedToUserInput[]
+    createMany?: TicketCreateManyAssignedToUserInputEnvelope
+    set?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    disconnect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    delete?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    update?: TicketUpdateWithWhereUniqueWithoutAssignedToUserInput | TicketUpdateWithWhereUniqueWithoutAssignedToUserInput[]
+    updateMany?: TicketUpdateManyWithWhereWithoutAssignedToUserInput | TicketUpdateManyWithWhereWithoutAssignedToUserInput[]
+    deleteMany?: TicketScalarWhereInput | TicketScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -16680,6 +16931,13 @@ export namespace Prisma {
     connect?: InvitationWhereUniqueInput | InvitationWhereUniqueInput[]
   }
 
+  export type TicketCreateNestedManyWithoutAssignedToTeamInput = {
+    create?: XOR<TicketCreateWithoutAssignedToTeamInput, TicketUncheckedCreateWithoutAssignedToTeamInput> | TicketCreateWithoutAssignedToTeamInput[] | TicketUncheckedCreateWithoutAssignedToTeamInput[]
+    connectOrCreate?: TicketCreateOrConnectWithoutAssignedToTeamInput | TicketCreateOrConnectWithoutAssignedToTeamInput[]
+    createMany?: TicketCreateManyAssignedToTeamInputEnvelope
+    connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+  }
+
   export type MemberUncheckedCreateNestedManyWithoutTeamInput = {
     create?: XOR<MemberCreateWithoutTeamInput, MemberUncheckedCreateWithoutTeamInput> | MemberCreateWithoutTeamInput[] | MemberUncheckedCreateWithoutTeamInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutTeamInput | MemberCreateOrConnectWithoutTeamInput[]
@@ -16692,6 +16950,13 @@ export namespace Prisma {
     connectOrCreate?: InvitationCreateOrConnectWithoutTeamInput | InvitationCreateOrConnectWithoutTeamInput[]
     createMany?: InvitationCreateManyTeamInputEnvelope
     connect?: InvitationWhereUniqueInput | InvitationWhereUniqueInput[]
+  }
+
+  export type TicketUncheckedCreateNestedManyWithoutAssignedToTeamInput = {
+    create?: XOR<TicketCreateWithoutAssignedToTeamInput, TicketUncheckedCreateWithoutAssignedToTeamInput> | TicketCreateWithoutAssignedToTeamInput[] | TicketUncheckedCreateWithoutAssignedToTeamInput[]
+    connectOrCreate?: TicketCreateOrConnectWithoutAssignedToTeamInput | TicketCreateOrConnectWithoutAssignedToTeamInput[]
+    createMany?: TicketCreateManyAssignedToTeamInputEnvelope
+    connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
   }
 
   export type OrganizationUpdateOneRequiredWithoutTeamsNestedInput = {
@@ -16730,6 +16995,20 @@ export namespace Prisma {
     deleteMany?: InvitationScalarWhereInput | InvitationScalarWhereInput[]
   }
 
+  export type TicketUpdateManyWithoutAssignedToTeamNestedInput = {
+    create?: XOR<TicketCreateWithoutAssignedToTeamInput, TicketUncheckedCreateWithoutAssignedToTeamInput> | TicketCreateWithoutAssignedToTeamInput[] | TicketUncheckedCreateWithoutAssignedToTeamInput[]
+    connectOrCreate?: TicketCreateOrConnectWithoutAssignedToTeamInput | TicketCreateOrConnectWithoutAssignedToTeamInput[]
+    upsert?: TicketUpsertWithWhereUniqueWithoutAssignedToTeamInput | TicketUpsertWithWhereUniqueWithoutAssignedToTeamInput[]
+    createMany?: TicketCreateManyAssignedToTeamInputEnvelope
+    set?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    disconnect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    delete?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    update?: TicketUpdateWithWhereUniqueWithoutAssignedToTeamInput | TicketUpdateWithWhereUniqueWithoutAssignedToTeamInput[]
+    updateMany?: TicketUpdateManyWithWhereWithoutAssignedToTeamInput | TicketUpdateManyWithWhereWithoutAssignedToTeamInput[]
+    deleteMany?: TicketScalarWhereInput | TicketScalarWhereInput[]
+  }
+
   export type MemberUncheckedUpdateManyWithoutTeamNestedInput = {
     create?: XOR<MemberCreateWithoutTeamInput, MemberUncheckedCreateWithoutTeamInput> | MemberCreateWithoutTeamInput[] | MemberUncheckedCreateWithoutTeamInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutTeamInput | MemberCreateOrConnectWithoutTeamInput[]
@@ -16758,10 +17037,36 @@ export namespace Prisma {
     deleteMany?: InvitationScalarWhereInput | InvitationScalarWhereInput[]
   }
 
+  export type TicketUncheckedUpdateManyWithoutAssignedToTeamNestedInput = {
+    create?: XOR<TicketCreateWithoutAssignedToTeamInput, TicketUncheckedCreateWithoutAssignedToTeamInput> | TicketCreateWithoutAssignedToTeamInput[] | TicketUncheckedCreateWithoutAssignedToTeamInput[]
+    connectOrCreate?: TicketCreateOrConnectWithoutAssignedToTeamInput | TicketCreateOrConnectWithoutAssignedToTeamInput[]
+    upsert?: TicketUpsertWithWhereUniqueWithoutAssignedToTeamInput | TicketUpsertWithWhereUniqueWithoutAssignedToTeamInput[]
+    createMany?: TicketCreateManyAssignedToTeamInputEnvelope
+    set?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    disconnect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    delete?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+    update?: TicketUpdateWithWhereUniqueWithoutAssignedToTeamInput | TicketUpdateWithWhereUniqueWithoutAssignedToTeamInput[]
+    updateMany?: TicketUpdateManyWithWhereWithoutAssignedToTeamInput | TicketUpdateManyWithWhereWithoutAssignedToTeamInput[]
+    deleteMany?: TicketScalarWhereInput | TicketScalarWhereInput[]
+  }
+
   export type OrganizationCreateNestedOneWithoutTicketsInput = {
     create?: XOR<OrganizationCreateWithoutTicketsInput, OrganizationUncheckedCreateWithoutTicketsInput>
     connectOrCreate?: OrganizationCreateOrConnectWithoutTicketsInput
     connect?: OrganizationWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutAssignedTicketsInput = {
+    create?: XOR<UserCreateWithoutAssignedTicketsInput, UserUncheckedCreateWithoutAssignedTicketsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedTicketsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TeamCreateNestedOneWithoutAssignedTicketsInput = {
+    create?: XOR<TeamCreateWithoutAssignedTicketsInput, TeamUncheckedCreateWithoutAssignedTicketsInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutAssignedTicketsInput
+    connect?: TeamWhereUniqueInput
   }
 
   export type TicketCommentCreateNestedManyWithoutTicketInput = {
@@ -16800,6 +17105,26 @@ export namespace Prisma {
     upsert?: OrganizationUpsertWithoutTicketsInput
     connect?: OrganizationWhereUniqueInput
     update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutTicketsInput, OrganizationUpdateWithoutTicketsInput>, OrganizationUncheckedUpdateWithoutTicketsInput>
+  }
+
+  export type UserUpdateOneWithoutAssignedTicketsNestedInput = {
+    create?: XOR<UserCreateWithoutAssignedTicketsInput, UserUncheckedCreateWithoutAssignedTicketsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAssignedTicketsInput
+    upsert?: UserUpsertWithoutAssignedTicketsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssignedTicketsInput, UserUpdateWithoutAssignedTicketsInput>, UserUncheckedUpdateWithoutAssignedTicketsInput>
+  }
+
+  export type TeamUpdateOneWithoutAssignedTicketsNestedInput = {
+    create?: XOR<TeamCreateWithoutAssignedTicketsInput, TeamUncheckedCreateWithoutAssignedTicketsInput>
+    connectOrCreate?: TeamCreateOrConnectWithoutAssignedTicketsInput
+    upsert?: TeamUpsertWithoutAssignedTicketsInput
+    disconnect?: TeamWhereInput | boolean
+    delete?: TeamWhereInput | boolean
+    connect?: TeamWhereUniqueInput
+    update?: XOR<XOR<TeamUpdateToOneWithWhereWithoutAssignedTicketsInput, TeamUpdateWithoutAssignedTicketsInput>, TeamUncheckedUpdateWithoutAssignedTicketsInput>
   }
 
   export type TicketCommentUpdateManyWithoutTicketNestedInput = {
@@ -17313,6 +17638,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TicketCreateWithoutAssignedToUserInput = {
+    id?: string
+    title: string
+    description: string
+    status: $Enums.TicketStatus
+    priority: $Enums.TicketPriority
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    responseTime?: number | null
+    organization: OrganizationCreateNestedOneWithoutTicketsInput
+    assignedToTeam?: TeamCreateNestedOneWithoutAssignedTicketsInput
+    comments?: TicketCommentCreateNestedManyWithoutTicketInput
+  }
+
+  export type TicketUncheckedCreateWithoutAssignedToUserInput = {
+    id?: string
+    title: string
+    description: string
+    status: $Enums.TicketStatus
+    priority: $Enums.TicketPriority
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    responseTime?: number | null
+    organizationId: string
+    assignedToTeamId?: string | null
+    comments?: TicketCommentUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type TicketCreateOrConnectWithoutAssignedToUserInput = {
+    where: TicketWhereUniqueInput
+    create: XOR<TicketCreateWithoutAssignedToUserInput, TicketUncheckedCreateWithoutAssignedToUserInput>
+  }
+
+  export type TicketCreateManyAssignedToUserInputEnvelope = {
+    data: TicketCreateManyAssignedToUserInput | TicketCreateManyAssignedToUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SessionUpsertWithWhereUniqueWithoutUserInput = {
     where: SessionWhereUniqueInput
     update: XOR<SessionUpdateWithoutUserInput, SessionUncheckedUpdateWithoutUserInput>
@@ -17470,6 +17833,39 @@ export namespace Prisma {
     parentId?: StringNullableFilter<"TicketComment"> | string | null
   }
 
+  export type TicketUpsertWithWhereUniqueWithoutAssignedToUserInput = {
+    where: TicketWhereUniqueInput
+    update: XOR<TicketUpdateWithoutAssignedToUserInput, TicketUncheckedUpdateWithoutAssignedToUserInput>
+    create: XOR<TicketCreateWithoutAssignedToUserInput, TicketUncheckedCreateWithoutAssignedToUserInput>
+  }
+
+  export type TicketUpdateWithWhereUniqueWithoutAssignedToUserInput = {
+    where: TicketWhereUniqueInput
+    data: XOR<TicketUpdateWithoutAssignedToUserInput, TicketUncheckedUpdateWithoutAssignedToUserInput>
+  }
+
+  export type TicketUpdateManyWithWhereWithoutAssignedToUserInput = {
+    where: TicketScalarWhereInput
+    data: XOR<TicketUpdateManyMutationInput, TicketUncheckedUpdateManyWithoutAssignedToUserInput>
+  }
+
+  export type TicketScalarWhereInput = {
+    AND?: TicketScalarWhereInput | TicketScalarWhereInput[]
+    OR?: TicketScalarWhereInput[]
+    NOT?: TicketScalarWhereInput | TicketScalarWhereInput[]
+    id?: StringFilter<"Ticket"> | string
+    title?: StringFilter<"Ticket"> | string
+    description?: StringFilter<"Ticket"> | string
+    status?: EnumTicketStatusFilter<"Ticket"> | $Enums.TicketStatus
+    priority?: EnumTicketPriorityFilter<"Ticket"> | $Enums.TicketPriority
+    createdAt?: DateTimeFilter<"Ticket"> | Date | string
+    updatedAt?: DateTimeFilter<"Ticket"> | Date | string
+    responseTime?: FloatNullableFilter<"Ticket"> | number | null
+    organizationId?: StringFilter<"Ticket"> | string
+    assignedToUserId?: StringNullableFilter<"Ticket"> | string | null
+    assignedToTeamId?: StringNullableFilter<"Ticket"> | string | null
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id?: string
     name?: string | null
@@ -17486,6 +17882,7 @@ export namespace Prisma {
     members?: MemberCreateNestedManyWithoutUserInput
     invitations?: InvitationCreateNestedManyWithoutInviterInput
     comments?: TicketCommentCreateNestedManyWithoutAuthorInput
+    assignedTickets?: TicketCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -17504,6 +17901,7 @@ export namespace Prisma {
     members?: MemberUncheckedCreateNestedManyWithoutUserInput
     invitations?: InvitationUncheckedCreateNestedManyWithoutInviterInput
     comments?: TicketCommentUncheckedCreateNestedManyWithoutAuthorInput
+    assignedTickets?: TicketUncheckedCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -17569,6 +17967,7 @@ export namespace Prisma {
     members?: MemberUpdateManyWithoutUserNestedInput
     invitations?: InvitationUpdateManyWithoutInviterNestedInput
     comments?: TicketCommentUpdateManyWithoutAuthorNestedInput
+    assignedTickets?: TicketUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -17587,6 +17986,7 @@ export namespace Prisma {
     members?: MemberUncheckedUpdateManyWithoutUserNestedInput
     invitations?: InvitationUncheckedUpdateManyWithoutInviterNestedInput
     comments?: TicketCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    assignedTickets?: TicketUncheckedUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type OrganizationUpsertWithoutSessionsInput = {
@@ -17642,6 +18042,7 @@ export namespace Prisma {
     members?: MemberCreateNestedManyWithoutUserInput
     invitations?: InvitationCreateNestedManyWithoutInviterInput
     comments?: TicketCommentCreateNestedManyWithoutAuthorInput
+    assignedTickets?: TicketCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -17660,6 +18061,7 @@ export namespace Prisma {
     members?: MemberUncheckedCreateNestedManyWithoutUserInput
     invitations?: InvitationUncheckedCreateNestedManyWithoutInviterInput
     comments?: TicketCommentUncheckedCreateNestedManyWithoutAuthorInput
+    assignedTickets?: TicketUncheckedCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -17694,6 +18096,7 @@ export namespace Prisma {
     members?: MemberUpdateManyWithoutUserNestedInput
     invitations?: InvitationUpdateManyWithoutInviterNestedInput
     comments?: TicketCommentUpdateManyWithoutAuthorNestedInput
+    assignedTickets?: TicketUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -17712,6 +18115,7 @@ export namespace Prisma {
     members?: MemberUncheckedUpdateManyWithoutUserNestedInput
     invitations?: InvitationUncheckedUpdateManyWithoutInviterNestedInput
     comments?: TicketCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    assignedTickets?: TicketUncheckedUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type MemberCreateWithoutOrganizationInput = {
@@ -17819,6 +18223,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     responseTime?: number | null
+    assignedToUser?: UserCreateNestedOneWithoutAssignedTicketsInput
+    assignedToTeam?: TeamCreateNestedOneWithoutAssignedTicketsInput
     comments?: TicketCommentCreateNestedManyWithoutTicketInput
   }
 
@@ -17831,6 +18237,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     responseTime?: number | null
+    assignedToUserId?: string | null
+    assignedToTeamId?: string | null
     comments?: TicketCommentUncheckedCreateNestedManyWithoutTicketInput
   }
 
@@ -17851,6 +18259,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: MemberCreateNestedManyWithoutTeamInput
     invitations?: InvitationCreateNestedManyWithoutTeamInput
+    assignedTickets?: TicketCreateNestedManyWithoutAssignedToTeamInput
   }
 
   export type TeamUncheckedCreateWithoutOrganizationInput = {
@@ -17860,6 +18269,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: MemberUncheckedCreateNestedManyWithoutTeamInput
     invitations?: InvitationUncheckedCreateNestedManyWithoutTeamInput
+    assignedTickets?: TicketUncheckedCreateNestedManyWithoutAssignedToTeamInput
   }
 
   export type TeamCreateOrConnectWithoutOrganizationInput = {
@@ -17936,21 +18346,6 @@ export namespace Prisma {
     data: XOR<TicketUpdateManyMutationInput, TicketUncheckedUpdateManyWithoutOrganizationInput>
   }
 
-  export type TicketScalarWhereInput = {
-    AND?: TicketScalarWhereInput | TicketScalarWhereInput[]
-    OR?: TicketScalarWhereInput[]
-    NOT?: TicketScalarWhereInput | TicketScalarWhereInput[]
-    id?: StringFilter<"Ticket"> | string
-    title?: StringFilter<"Ticket"> | string
-    description?: StringFilter<"Ticket"> | string
-    status?: EnumTicketStatusFilter<"Ticket"> | $Enums.TicketStatus
-    priority?: EnumTicketPriorityFilter<"Ticket"> | $Enums.TicketPriority
-    createdAt?: DateTimeFilter<"Ticket"> | Date | string
-    updatedAt?: DateTimeFilter<"Ticket"> | Date | string
-    responseTime?: FloatNullableFilter<"Ticket"> | number | null
-    organizationId?: StringFilter<"Ticket"> | string
-  }
-
   export type TeamUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: TeamWhereUniqueInput
     update: XOR<TeamUpdateWithoutOrganizationInput, TeamUncheckedUpdateWithoutOrganizationInput>
@@ -17994,6 +18389,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     invitations?: InvitationCreateNestedManyWithoutInviterInput
     comments?: TicketCommentCreateNestedManyWithoutAuthorInput
+    assignedTickets?: TicketCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserUncheckedCreateWithoutMembersInput = {
@@ -18012,6 +18408,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     invitations?: InvitationUncheckedCreateNestedManyWithoutInviterInput
     comments?: TicketCommentUncheckedCreateNestedManyWithoutAuthorInput
+    assignedTickets?: TicketUncheckedCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserCreateOrConnectWithoutMembersInput = {
@@ -18057,6 +18454,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutTeamsInput
     invitations?: InvitationCreateNestedManyWithoutTeamInput
+    assignedTickets?: TicketCreateNestedManyWithoutAssignedToTeamInput
   }
 
   export type TeamUncheckedCreateWithoutMembersInput = {
@@ -18066,6 +18464,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     invitations?: InvitationUncheckedCreateNestedManyWithoutTeamInput
+    assignedTickets?: TicketUncheckedCreateNestedManyWithoutAssignedToTeamInput
   }
 
   export type TeamCreateOrConnectWithoutMembersInput = {
@@ -18100,6 +18499,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     invitations?: InvitationUpdateManyWithoutInviterNestedInput
     comments?: TicketCommentUpdateManyWithoutAuthorNestedInput
+    assignedTickets?: TicketUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMembersInput = {
@@ -18118,6 +18518,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     invitations?: InvitationUncheckedUpdateManyWithoutInviterNestedInput
     comments?: TicketCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    assignedTickets?: TicketUncheckedUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type OrganizationUpsertWithoutMembersInput = {
@@ -18175,6 +18576,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutTeamsNestedInput
     invitations?: InvitationUpdateManyWithoutTeamNestedInput
+    assignedTickets?: TicketUpdateManyWithoutAssignedToTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutMembersInput = {
@@ -18184,6 +18586,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     invitations?: InvitationUncheckedUpdateManyWithoutTeamNestedInput
+    assignedTickets?: TicketUncheckedUpdateManyWithoutAssignedToTeamNestedInput
   }
 
   export type UserCreateWithoutInvitationsInput = {
@@ -18202,6 +18605,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     members?: MemberCreateNestedManyWithoutUserInput
     comments?: TicketCommentCreateNestedManyWithoutAuthorInput
+    assignedTickets?: TicketCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserUncheckedCreateWithoutInvitationsInput = {
@@ -18220,6 +18624,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     members?: MemberUncheckedCreateNestedManyWithoutUserInput
     comments?: TicketCommentUncheckedCreateNestedManyWithoutAuthorInput
+    assignedTickets?: TicketUncheckedCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserCreateOrConnectWithoutInvitationsInput = {
@@ -18265,6 +18670,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutTeamsInput
     members?: MemberCreateNestedManyWithoutTeamInput
+    assignedTickets?: TicketCreateNestedManyWithoutAssignedToTeamInput
   }
 
   export type TeamUncheckedCreateWithoutInvitationsInput = {
@@ -18274,6 +18680,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: MemberUncheckedCreateNestedManyWithoutTeamInput
+    assignedTickets?: TicketUncheckedCreateNestedManyWithoutAssignedToTeamInput
   }
 
   export type TeamCreateOrConnectWithoutInvitationsInput = {
@@ -18308,6 +18715,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     members?: MemberUpdateManyWithoutUserNestedInput
     comments?: TicketCommentUpdateManyWithoutAuthorNestedInput
+    assignedTickets?: TicketUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitationsInput = {
@@ -18326,6 +18734,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     members?: MemberUncheckedUpdateManyWithoutUserNestedInput
     comments?: TicketCommentUncheckedUpdateManyWithoutAuthorNestedInput
+    assignedTickets?: TicketUncheckedUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type OrganizationUpsertWithoutInvitationsInput = {
@@ -18383,6 +18792,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutTeamsNestedInput
     members?: MemberUpdateManyWithoutTeamNestedInput
+    assignedTickets?: TicketUpdateManyWithoutAssignedToTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutInvitationsInput = {
@@ -18392,6 +18802,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUncheckedUpdateManyWithoutTeamNestedInput
+    assignedTickets?: TicketUncheckedUpdateManyWithoutAssignedToTeamNestedInput
   }
 
   export type OrganizationCreateWithoutTeamsInput = {
@@ -18487,6 +18898,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TicketCreateWithoutAssignedToTeamInput = {
+    id?: string
+    title: string
+    description: string
+    status: $Enums.TicketStatus
+    priority: $Enums.TicketPriority
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    responseTime?: number | null
+    organization: OrganizationCreateNestedOneWithoutTicketsInput
+    assignedToUser?: UserCreateNestedOneWithoutAssignedTicketsInput
+    comments?: TicketCommentCreateNestedManyWithoutTicketInput
+  }
+
+  export type TicketUncheckedCreateWithoutAssignedToTeamInput = {
+    id?: string
+    title: string
+    description: string
+    status: $Enums.TicketStatus
+    priority: $Enums.TicketPriority
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    responseTime?: number | null
+    organizationId: string
+    assignedToUserId?: string | null
+    comments?: TicketCommentUncheckedCreateNestedManyWithoutTicketInput
+  }
+
+  export type TicketCreateOrConnectWithoutAssignedToTeamInput = {
+    where: TicketWhereUniqueInput
+    create: XOR<TicketCreateWithoutAssignedToTeamInput, TicketUncheckedCreateWithoutAssignedToTeamInput>
+  }
+
+  export type TicketCreateManyAssignedToTeamInputEnvelope = {
+    data: TicketCreateManyAssignedToTeamInput | TicketCreateManyAssignedToTeamInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutTeamsInput = {
     update: XOR<OrganizationUpdateWithoutTeamsInput, OrganizationUncheckedUpdateWithoutTeamsInput>
     create: XOR<OrganizationCreateWithoutTeamsInput, OrganizationUncheckedCreateWithoutTeamsInput>
@@ -18556,6 +19005,22 @@ export namespace Prisma {
     data: XOR<InvitationUpdateManyMutationInput, InvitationUncheckedUpdateManyWithoutTeamInput>
   }
 
+  export type TicketUpsertWithWhereUniqueWithoutAssignedToTeamInput = {
+    where: TicketWhereUniqueInput
+    update: XOR<TicketUpdateWithoutAssignedToTeamInput, TicketUncheckedUpdateWithoutAssignedToTeamInput>
+    create: XOR<TicketCreateWithoutAssignedToTeamInput, TicketUncheckedCreateWithoutAssignedToTeamInput>
+  }
+
+  export type TicketUpdateWithWhereUniqueWithoutAssignedToTeamInput = {
+    where: TicketWhereUniqueInput
+    data: XOR<TicketUpdateWithoutAssignedToTeamInput, TicketUncheckedUpdateWithoutAssignedToTeamInput>
+  }
+
+  export type TicketUpdateManyWithWhereWithoutAssignedToTeamInput = {
+    where: TicketScalarWhereInput
+    data: XOR<TicketUpdateManyMutationInput, TicketUncheckedUpdateManyWithoutAssignedToTeamInput>
+  }
+
   export type OrganizationCreateWithoutTicketsInput = {
     id?: string
     name: string
@@ -18585,6 +19050,74 @@ export namespace Prisma {
   export type OrganizationCreateOrConnectWithoutTicketsInput = {
     where: OrganizationWhereUniqueInput
     create: XOR<OrganizationCreateWithoutTicketsInput, OrganizationUncheckedCreateWithoutTicketsInput>
+  }
+
+  export type UserCreateWithoutAssignedTicketsInput = {
+    id?: string
+    name?: string | null
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    role?: string
+    banned?: boolean
+    banReason?: string | null
+    banExpires?: Date | string | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    members?: MemberCreateNestedManyWithoutUserInput
+    invitations?: InvitationCreateNestedManyWithoutInviterInput
+    comments?: TicketCommentCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserUncheckedCreateWithoutAssignedTicketsInput = {
+    id?: string
+    name?: string | null
+    email: string
+    emailVerified?: boolean
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    role?: string
+    banned?: boolean
+    banReason?: string | null
+    banExpires?: Date | string | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    members?: MemberUncheckedCreateNestedManyWithoutUserInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutInviterInput
+    comments?: TicketCommentUncheckedCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserCreateOrConnectWithoutAssignedTicketsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAssignedTicketsInput, UserUncheckedCreateWithoutAssignedTicketsInput>
+  }
+
+  export type TeamCreateWithoutAssignedTicketsInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTeamsInput
+    members?: MemberCreateNestedManyWithoutTeamInput
+    invitations?: InvitationCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamUncheckedCreateWithoutAssignedTicketsInput = {
+    id?: string
+    name: string
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: MemberUncheckedCreateNestedManyWithoutTeamInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutTeamInput
+  }
+
+  export type TeamCreateOrConnectWithoutAssignedTicketsInput = {
+    where: TeamWhereUniqueInput
+    create: XOR<TeamCreateWithoutAssignedTicketsInput, TeamUncheckedCreateWithoutAssignedTicketsInput>
   }
 
   export type TicketCommentCreateWithoutTicketInput = {
@@ -18654,6 +19187,86 @@ export namespace Prisma {
     teams?: TeamUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
+  export type UserUpsertWithoutAssignedTicketsInput = {
+    update: XOR<UserUpdateWithoutAssignedTicketsInput, UserUncheckedUpdateWithoutAssignedTicketsInput>
+    create: XOR<UserCreateWithoutAssignedTicketsInput, UserUncheckedCreateWithoutAssignedTicketsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAssignedTicketsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAssignedTicketsInput, UserUncheckedUpdateWithoutAssignedTicketsInput>
+  }
+
+  export type UserUpdateWithoutAssignedTicketsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: StringFieldUpdateOperationsInput | string
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    banReason?: NullableStringFieldUpdateOperationsInput | string | null
+    banExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    members?: MemberUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUpdateManyWithoutInviterNestedInput
+    comments?: TicketCommentUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAssignedTicketsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    role?: StringFieldUpdateOperationsInput | string
+    banned?: BoolFieldUpdateOperationsInput | boolean
+    banReason?: NullableStringFieldUpdateOperationsInput | string | null
+    banExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    members?: MemberUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutInviterNestedInput
+    comments?: TicketCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type TeamUpsertWithoutAssignedTicketsInput = {
+    update: XOR<TeamUpdateWithoutAssignedTicketsInput, TeamUncheckedUpdateWithoutAssignedTicketsInput>
+    create: XOR<TeamCreateWithoutAssignedTicketsInput, TeamUncheckedCreateWithoutAssignedTicketsInput>
+    where?: TeamWhereInput
+  }
+
+  export type TeamUpdateToOneWithWhereWithoutAssignedTicketsInput = {
+    where?: TeamWhereInput
+    data: XOR<TeamUpdateWithoutAssignedTicketsInput, TeamUncheckedUpdateWithoutAssignedTicketsInput>
+  }
+
+  export type TeamUpdateWithoutAssignedTicketsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTeamsNestedInput
+    members?: MemberUpdateManyWithoutTeamNestedInput
+    invitations?: InvitationUpdateManyWithoutTeamNestedInput
+  }
+
+  export type TeamUncheckedUpdateWithoutAssignedTicketsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: MemberUncheckedUpdateManyWithoutTeamNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutTeamNestedInput
+  }
+
   export type TicketCommentUpsertWithWhereUniqueWithoutTicketInput = {
     where: TicketCommentWhereUniqueInput
     update: XOR<TicketCommentUpdateWithoutTicketInput, TicketCommentUncheckedUpdateWithoutTicketInput>
@@ -18680,6 +19293,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     responseTime?: number | null
     organization: OrganizationCreateNestedOneWithoutTicketsInput
+    assignedToUser?: UserCreateNestedOneWithoutAssignedTicketsInput
+    assignedToTeam?: TeamCreateNestedOneWithoutAssignedTicketsInput
   }
 
   export type TicketUncheckedCreateWithoutCommentsInput = {
@@ -18692,6 +19307,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     responseTime?: number | null
     organizationId: string
+    assignedToUserId?: string | null
+    assignedToTeamId?: string | null
   }
 
   export type TicketCreateOrConnectWithoutCommentsInput = {
@@ -18715,6 +19332,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     members?: MemberCreateNestedManyWithoutUserInput
     invitations?: InvitationCreateNestedManyWithoutInviterInput
+    assignedTickets?: TicketCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserUncheckedCreateWithoutCommentsInput = {
@@ -18733,6 +19351,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     members?: MemberUncheckedCreateNestedManyWithoutUserInput
     invitations?: InvitationUncheckedCreateNestedManyWithoutInviterInput
+    assignedTickets?: TicketUncheckedCreateNestedManyWithoutAssignedToUserInput
   }
 
   export type UserCreateOrConnectWithoutCommentsInput = {
@@ -18816,6 +19435,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     organization?: OrganizationUpdateOneRequiredWithoutTicketsNestedInput
+    assignedToUser?: UserUpdateOneWithoutAssignedTicketsNestedInput
+    assignedToTeam?: TeamUpdateOneWithoutAssignedTicketsNestedInput
   }
 
   export type TicketUncheckedUpdateWithoutCommentsInput = {
@@ -18828,6 +19449,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
     organizationId?: StringFieldUpdateOperationsInput | string
+    assignedToUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToTeamId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUpsertWithoutCommentsInput = {
@@ -18857,6 +19480,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     members?: MemberUpdateManyWithoutUserNestedInput
     invitations?: InvitationUpdateManyWithoutInviterNestedInput
+    assignedTickets?: TicketUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCommentsInput = {
@@ -18875,6 +19499,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     members?: MemberUncheckedUpdateManyWithoutUserNestedInput
     invitations?: InvitationUncheckedUpdateManyWithoutInviterNestedInput
+    assignedTickets?: TicketUncheckedUpdateManyWithoutAssignedToUserNestedInput
   }
 
   export type TicketCommentUpsertWithoutRepliesInput = {
@@ -18979,6 +19604,19 @@ export namespace Prisma {
     updatedAt?: Date | string
     ticketId: string
     parentId?: string | null
+  }
+
+  export type TicketCreateManyAssignedToUserInput = {
+    id?: string
+    title: string
+    description: string
+    status: $Enums.TicketStatus
+    priority: $Enums.TicketPriority
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    responseTime?: number | null
+    organizationId: string
+    assignedToTeamId?: string | null
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -19154,6 +19792,47 @@ export namespace Prisma {
     parentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type TicketUpdateWithoutAssignedToUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
+    priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    organization?: OrganizationUpdateOneRequiredWithoutTicketsNestedInput
+    assignedToTeam?: TeamUpdateOneWithoutAssignedTicketsNestedInput
+    comments?: TicketCommentUpdateManyWithoutTicketNestedInput
+  }
+
+  export type TicketUncheckedUpdateWithoutAssignedToUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
+    priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    assignedToTeamId?: NullableStringFieldUpdateOperationsInput | string | null
+    comments?: TicketCommentUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type TicketUncheckedUpdateManyWithoutAssignedToUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
+    priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    assignedToTeamId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type MemberCreateManyOrganizationInput = {
     id?: string
     userId: string
@@ -19196,6 +19875,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     responseTime?: number | null
+    assignedToUserId?: string | null
+    assignedToTeamId?: string | null
   }
 
   export type TeamCreateManyOrganizationInput = {
@@ -19313,6 +19994,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    assignedToUser?: UserUpdateOneWithoutAssignedTicketsNestedInput
+    assignedToTeam?: TeamUpdateOneWithoutAssignedTicketsNestedInput
     comments?: TicketCommentUpdateManyWithoutTicketNestedInput
   }
 
@@ -19325,6 +20008,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    assignedToUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToTeamId?: NullableStringFieldUpdateOperationsInput | string | null
     comments?: TicketCommentUncheckedUpdateManyWithoutTicketNestedInput
   }
 
@@ -19337,6 +20022,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    assignedToUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedToTeamId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TeamUpdateWithoutOrganizationInput = {
@@ -19346,6 +20033,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUpdateManyWithoutTeamNestedInput
     invitations?: InvitationUpdateManyWithoutTeamNestedInput
+    assignedTickets?: TicketUpdateManyWithoutAssignedToTeamNestedInput
   }
 
   export type TeamUncheckedUpdateWithoutOrganizationInput = {
@@ -19355,6 +20043,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUncheckedUpdateManyWithoutTeamNestedInput
     invitations?: InvitationUncheckedUpdateManyWithoutTeamNestedInput
+    assignedTickets?: TicketUncheckedUpdateManyWithoutAssignedToTeamNestedInput
   }
 
   export type TeamUncheckedUpdateManyWithoutOrganizationInput = {
@@ -19383,6 +20072,19 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     expiresAt: Date | string
     createdAt?: Date | string
+  }
+
+  export type TicketCreateManyAssignedToTeamInput = {
+    id?: string
+    title: string
+    description: string
+    status: $Enums.TicketStatus
+    priority: $Enums.TicketPriority
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    responseTime?: number | null
+    organizationId: string
+    assignedToUserId?: string | null
   }
 
   export type MemberUpdateWithoutTeamInput = {
@@ -19446,6 +20148,47 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TicketUpdateWithoutAssignedToTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
+    priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    organization?: OrganizationUpdateOneRequiredWithoutTicketsNestedInput
+    assignedToUser?: UserUpdateOneWithoutAssignedTicketsNestedInput
+    comments?: TicketCommentUpdateManyWithoutTicketNestedInput
+  }
+
+  export type TicketUncheckedUpdateWithoutAssignedToTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
+    priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    assignedToUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    comments?: TicketCommentUncheckedUpdateManyWithoutTicketNestedInput
+  }
+
+  export type TicketUncheckedUpdateManyWithoutAssignedToTeamInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
+    priority?: EnumTicketPriorityFieldUpdateOperationsInput | $Enums.TicketPriority
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    responseTime?: NullableFloatFieldUpdateOperationsInput | number | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    assignedToUserId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TicketCommentCreateManyTicketInput = {
