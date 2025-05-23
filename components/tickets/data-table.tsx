@@ -55,12 +55,6 @@ export function DataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = React.useState({});
 
   // Set search term from parent component
-  React.useEffect(() => {
-    if (searchTerm && table.getColumn("title")) {
-      table.getColumn("title")?.setFilterValue(searchTerm);
-    }
-  }, [searchTerm]);
-
   const table = useReactTable({
     data,
     columns,
@@ -79,6 +73,17 @@ export function DataTable<TData, TValue>({
       rowSelection,
     },
   });
+
+  React.useEffect(() => {
+    const titleColumn = table.getColumn("title");
+    if (titleColumn) {
+      if (searchTerm) {
+        titleColumn.setFilterValue(searchTerm);
+      } else {
+        titleColumn.setFilterValue("");
+      }
+    }
+  }, [searchTerm, table]);
 
   // Helper function to get cell content by column ID
   const getCellContent = (row: any, columnId: string) => {
@@ -208,8 +213,8 @@ export function DataTable<TData, TValue>({
                 </div>
                 <div className="flex flex-wrap gap-4 text-sm pt-2">
                   <div>
-                    <span className="text-muted-foreground">Agent:</span>{" "}
-                    {(row.original as any).assignedAgent}
+                    <span className="text-muted-foreground">Assigned to:</span>{" "}
+                    {getCellContent(row, "assignment")}
                   </div>
                   <div>
                     <span className="text-muted-foreground">Response:</span>{" "}

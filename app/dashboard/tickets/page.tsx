@@ -16,6 +16,11 @@ export default function TicketsPage() {
   const [filteredData, setFilteredData] = useState<UITicket[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Filter states
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
+  const [selectedAssignments, setSelectedAssignments] = useState<string[]>([]);
+
   // Map API tickets to UI tickets format
   const mapApiTicketsToUiTickets = (apiTickets: ApiTicket[]): UITicket[] => {
     return apiTickets.map((ticket) => ({
@@ -53,16 +58,60 @@ export default function TicketsPage() {
     getTickets();
   }, [getTickets]);
 
+  // Apply all filters when tickets or filter states change
   useEffect(() => {
-    if (tickets && tickets.length > 0) {
-      const uiTickets = mapApiTicketsToUiTickets(tickets);
-      setFilteredData(uiTickets);
+    if (!tickets || tickets.length === 0) return;
+
+    let filtered = [...tickets];
+
+    // Apply status filter
+    if (selectedStatuses.length > 0) {
+      filtered = filtered.filter((ticket) =>
+        selectedStatuses.includes(ticket.status)
+      );
     }
-  }, [tickets]);
+
+    // Apply priority filter
+    if (selectedPriorities.length > 0) {
+      filtered = filtered.filter((ticket) =>
+        selectedPriorities.includes(ticket.priority)
+      );
+    }
+
+    // Apply assignment filter
+    if (selectedAssignments.length > 0) {
+      filtered = filtered.filter((ticket) => {
+        if (selectedAssignments.includes("unassigned")) {
+          if (!ticket.assignedToUserId && !ticket.assignedToTeamId) {
+            return true;
+          }
+        }
+        if (selectedAssignments.includes("user")) {
+          if (ticket.assignedToUserId) {
+            return true;
+          }
+        }
+        if (selectedAssignments.includes("team")) {
+          if (ticket.assignedToTeamId) {
+            return true;
+          }
+        }
+        return false;
+      });
+    }
+
+    setFilteredData(mapApiTicketsToUiTickets(filtered));
+  }, [tickets, selectedStatuses, selectedPriorities, selectedAssignments]);
 
   // Handle search
   const handleSearch = (term: string) => {
     setSearchTerm(term);
+
+    // If search term is empty, reset to show all tickets
+    if (!term && tickets) {
+      // Don't reset filters, just update the search term
+      // Filters will be applied in the useEffect
+    }
   };
 
   // Handle ticket creation
@@ -72,29 +121,15 @@ export default function TicketsPage() {
 
   // Filter handlers
   const handleStatusFilter = (statuses: string[]) => {
-    if (!tickets) return;
-
-    if (statuses.length === 0) {
-      setFilteredData(mapApiTicketsToUiTickets(tickets));
-    } else {
-      const filtered = tickets.filter((ticket) =>
-        statuses.includes(ticket.status)
-      );
-      setFilteredData(mapApiTicketsToUiTickets(filtered));
-    }
+    setSelectedStatuses(statuses);
   };
 
   const handlePriorityFilter = (priorities: string[]) => {
-    if (!tickets) return;
+    setSelectedPriorities(priorities);
+  };
 
-    if (priorities.length === 0) {
-      setFilteredData(mapApiTicketsToUiTickets(tickets));
-    } else {
-      const filtered = tickets.filter((ticket) =>
-        priorities.includes(ticket.priority)
-      );
-      setFilteredData(mapApiTicketsToUiTickets(filtered));
-    }
+  const handleAssignmentFilter = (assignments: string[]) => {
+    setSelectedAssignments(assignments);
   };
 
   return (
@@ -120,6 +155,7 @@ export default function TicketsPage() {
         <TicketFilters
           onStatusChange={handleStatusFilter}
           onPriorityChange={handlePriorityFilter}
+          onAssignmentChange={handleAssignmentFilter}
         />
       </div>
 
