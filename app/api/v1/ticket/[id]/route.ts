@@ -29,7 +29,15 @@ export async function DELETE(req: NextRequest) {
 
 /* Update a ticket */
 export async function PUT(req: NextRequest) {
-  const { id, title, description, priority, status } = await req.json();
+  const {
+    id,
+    title,
+    description,
+    priority,
+    status,
+    assignedToUserId,
+    assignedToTeamId,
+  } = await req.json();
 
   if (!id || !title || !description || !priority || !status) {
     return NextResponse.json(
@@ -41,7 +49,31 @@ export async function PUT(req: NextRequest) {
   try {
     const ticket = await prisma.ticket.update({
       where: { id },
-      data: { title, description, priority, status },
+      data: {
+        title,
+        description,
+        priority,
+        status,
+        // The migration is done, so we can use assignment fields
+        assignedToUserId: assignedToUserId || null,
+        assignedToTeamId: assignedToTeamId || null,
+      },
+      include: {
+        assignedToUser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+        assignedToTeam: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json(ticket, { status: 200 });
@@ -68,6 +100,22 @@ export async function GET(
   try {
     const ticket = await prisma.ticket.findUnique({
       where: { id },
+      include: {
+        assignedToUser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+        assignedToTeam: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
 
     if (!ticket) {

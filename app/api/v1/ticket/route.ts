@@ -5,8 +5,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 /* Create a new ticket */
 export async function POST(req: NextRequest) {
-  const { title, description, priority, status, organizationId } =
-    await req.json();
+  const {
+    title,
+    description,
+    priority,
+    status,
+    organizationId,
+    assignedToUserId,
+    assignedToTeamId,
+  } = await req.json();
 
   const session = await auth.api.getSession({
     headers: await headers(), // you need to pass the headers object.
@@ -31,6 +38,25 @@ export async function POST(req: NextRequest) {
         priority,
         status,
         organizationId,
+        // The migration is done, so we can use assignment fields
+        assignedToUserId: assignedToUserId || null,
+        assignedToTeamId: assignedToTeamId || null,
+      },
+      include: {
+        assignedToUser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+        assignedToTeam: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
 
@@ -58,7 +84,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Get tickets with their comments count
+    // Get tickets with their comments count and assignment information
     const tickets = await prisma.ticket.findMany({
       where: {
         organizationId,
@@ -66,6 +92,21 @@ export async function GET(req: NextRequest) {
       include: {
         _count: {
           select: { comments: true },
+        },
+        // The migration is done, so we can include assignment fields
+        assignedToUser: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+        assignedToTeam: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
       },
     });

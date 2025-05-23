@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 export interface UseOrganizationOptions {
@@ -151,6 +151,37 @@ export function useOrganization(options: UseOrganizationOptions = {}) {
   const isAdmin = () => hasRole(["owner", "admin"]);
   const isMember = () => hasRole(["owner", "admin", "member"]);
 
+  // Functions for getting organization members and teams
+  const getOrganizationMembers = useCallback(async () => {
+    if (!activeOrganization) return null;
+
+    try {
+      const response = await fetch(
+        `/api/organization/members?organizationId=${activeOrganization.id}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch members");
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching members:", error);
+      return null;
+    }
+  }, [activeOrganization]);
+
+  const getOrganizationTeams = useCallback(async () => {
+    if (!activeOrganization) return null;
+
+    try {
+      const response = await fetch(
+        `/api/organization/teams?organizationId=${activeOrganization.id}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch teams");
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+      return null;
+    }
+  }, [activeOrganization]);
+
   return {
     session,
     organizations,
@@ -175,5 +206,8 @@ export function useOrganization(options: UseOrganizationOptions = {}) {
         organizationId,
       });
     },
+    // New functions for assignments
+    getOrganizationMembers,
+    getOrganizationTeams,
   };
 }

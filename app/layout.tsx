@@ -4,6 +4,7 @@ import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/next";
+import { CommandMenu } from "@/components/command-menu";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,6 +28,7 @@ export default function RootLayout({
           <SidebarProvider>
             <Toaster />
             {children}
+            <CommandMenu />
             <Analytics />
           </SidebarProvider>
         </ThemeProvider>

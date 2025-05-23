@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/select";
 import { Edit, Pencil } from "lucide-react";
 import { toast } from "sonner";
+import AssignmentSelector from "./assignment-selector";
 
 interface EditTicketModalProps {
   ticket: Ticket;
@@ -72,6 +73,12 @@ export default forwardRef<EditTicketModalHandle, EditTicketModalProps>(
     const [status, setStatus] = useState<TicketStatus>(
       ticket.status as TicketStatus
     );
+    const [assignedToUserId, setAssignedToUserId] = useState<string | null>(
+      ticket.assignedToUserId || null
+    );
+    const [assignedToTeamId, setAssignedToTeamId] = useState<string | null>(
+      ticket.assignedToTeamId || null
+    );
 
     const { updateTicket } = useTickets();
 
@@ -86,7 +93,17 @@ export default forwardRef<EditTicketModalHandle, EditTicketModalProps>(
       setDescription(ticket.description);
       setPriority(ticket.priority as TicketPriority);
       setStatus(ticket.status as TicketStatus);
+      setAssignedToUserId(ticket.assignedToUserId || null);
+      setAssignedToTeamId(ticket.assignedToTeamId || null);
     }, [ticket]);
+
+    const handleAssignmentChange = (
+      userId: string | null,
+      teamId: string | null
+    ) => {
+      setAssignedToUserId(userId);
+      setAssignedToTeamId(teamId);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -107,6 +124,8 @@ export default forwardRef<EditTicketModalHandle, EditTicketModalProps>(
           description,
           priority,
           status,
+          assignedToUserId,
+          assignedToTeamId,
         };
 
         const result = await updateTicket(updateData);
@@ -145,7 +164,7 @@ export default forwardRef<EditTicketModalHandle, EditTicketModalProps>(
             </Button>
           )}
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
           <form onSubmit={handleSubmit}>
             <DialogHeader>
               <DialogTitle>Edit Ticket #{ticket.id}</DialogTitle>
@@ -222,6 +241,14 @@ export default forwardRef<EditTicketModalHandle, EditTicketModalProps>(
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+              <div className="border-t pt-4">
+                <AssignmentSelector
+                  assignedToUserId={assignedToUserId}
+                  assignedToTeamId={assignedToTeamId}
+                  onAssignmentChange={handleAssignmentChange}
+                  disabled={isSubmitting}
+                />
               </div>
             </div>
             <DialogFooter>

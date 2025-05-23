@@ -12,8 +12,10 @@ export default function DashboardLayout({
   return (
     <OrganizationProvider requireOrganization={true} showSwitcher={false}>
       <TeamProvider>
-        <AppSidebar />
-        <div className="w-full h-screen">{children}</div>
+        <div className="flex h-screen w-full">
+          <AppSidebar />
+          <div className="flex-1 overflow-auto">{children}</div>
+        </div>
       </TeamProvider>
     </OrganizationProvider>
   );

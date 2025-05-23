@@ -88,11 +88,16 @@ export function AppSidebar() {
 
   // Helper function to check if a link is active
   const isActive = (href: string) => {
+    if (href === "/dashboard") {
+      // For dashboard, only be active if exactly at /dashboard
+      return pathname === "/dashboard";
+    }
+    // For other routes, check if the path matches exactly or starts with the href followed by /
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
   return (
-    <Sidebar className="bg-background">
+    <Sidebar className="bg-background h-screen border-r shrink-0 flex flex-col">
       <SidebarHeader>
         <div className="flex w-full items-center justify-between">
           <DropdownMenu>
