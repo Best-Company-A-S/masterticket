@@ -1,6 +1,5 @@
 # Base image for building the application
-#FROM node:20-alpine AS builder
-FROM node:20-alpine AS development
+FROM node:20-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -18,33 +17,32 @@ COPY . .
 RUN npx prisma generate
 
 # Build the application
-#RUN npm run build
+RUN npm run build
 
 # Production image
-#FROM node:20-alpine AS runner
+FROM node:20-alpine AS runner
 
-#WORKDIR /app
+WORKDIR /app
 
-#ENV NODE_ENV production
+ENV NODE_ENV production
 
 # Create a non-root user
-#RUN addgroup --system --gid 1001 nodejs
-#RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
 # Copy necessary files from builder stage
-#COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-#COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
-#COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
-#COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-#COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
-#COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts ./next.config.ts
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts ./next.config.ts
 
 # Set proper permissions
-#USER nextjs
+USER nextjs
 
 # Expose port
 EXPOSE 3000
 
 # Start the application
-#CMD ["npm", "run", "start"]
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
