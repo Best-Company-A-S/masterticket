@@ -97,7 +97,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className="bg-background">
+    <Sidebar className="bg-background h-screen border-r shrink-0 flex flex-col">
       <SidebarHeader>
         <div className="flex w-full items-center justify-between">
           <DropdownMenu>
